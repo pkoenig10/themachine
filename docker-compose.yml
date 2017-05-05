@@ -16,18 +16,6 @@ services:
       - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
       - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
       - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
-      - webroot:/usr/local/apache2/htdocs:ro
-
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    command: certonly -c /etc/letencrypt/cli.ini
-    environment: *environment
-    hostname: *hostname
-    volumes:
-      - ./certbot/cli.ini:/etc/letencrypt/cli.ini:ro
-      - letsencrypt:/etc/letsencrypt
-      - webroot:/webroot
 
   netdata:
     container_name: netdata
@@ -87,4 +75,4 @@ services:
 
 volumes:
   letsencrypt:
-  webroot:
+    external: true

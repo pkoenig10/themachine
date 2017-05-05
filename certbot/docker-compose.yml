@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    command: certonly -c /etc/letencrypt/cli.ini
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./cli.ini:/etc/letencrypt/cli.ini:ro
+      - letsencrypt:/etc/letsencrypt
+
+volumes:
+  letsencrypt:
+    external: true
