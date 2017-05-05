@@ -1,0 +1,8 @@
+# Apache
+/apache/httpd-secrets.conf
+
+# Transmission
+/transmission-web
+
+# Data
+/data

@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  apache:
+    container_name: apache
+    build: ./apache
+    environment: &environment
+      TZ: America/Los_Angeles
+    hostname: &hostname themachine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./apache/httpd-secrets.conf:/usr/local/apache2/conf/extra/httpd-secrets.conf:ro
+      - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
+      - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
+      - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
+      - webroot:/usr/local/apache2/htdocs:ro
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    command: certonly -c /etc/letencrypt/cli.ini
+    environment: *environment
+    hostname: *hostname
+    volumes:
+      - ./certbot/cli.ini:/etc/letencrypt/cli.ini:ro
+      - letsencrypt:/etc/letsencrypt
+      - webroot:/webroot
+
+  netdata:
+    container_name: netdata
+    image: titpetric/netdata
+    environment: *environment
+    hostname: *hostname
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:plexpass
+    environment: *environment
+    hostname: *hostname
+    ports:
+      - 127.0.0.1:32400:32400
+    volumes:
+      - ./data:/data
+
+  plexpy:
+    container_name: plexpy
+    image: linuxserver/plexpy
+    environment: *environment
+    hostname: *hostname
+
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr
+    environment: *environment
+    hostname: *hostname
+
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr
+    environment: *environment
+    hostname: *hostname
+
+  transmission:
+    container_name: transmission
+    image: linuxserver/transmission:latest
+    environment: *environment
+    hostname: *hostname
+    volumes:
+      - ./transmission-web:/usr/share/transmission/web
+      - ./data/downloads:/downloads
+
+  watchtower:
+    container_name: watchtower
+    image: v2tec/watchtower
+    command: --schedule "0 0 4 * * *" --cleanup
+    environment: *environment
+    hostname: *hostname
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  letsencrypt:
+  webroot:
