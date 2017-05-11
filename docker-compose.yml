@@ -69,7 +69,7 @@ services:
     environment: *environment
     hostname: *hostname
     volumes:
-      - ./transmission-web:/usr/share/transmission/web
+      - ./transmission-web:/usr/share/transmission/web:ro
       - ./downloads:/downloads
 
   watchtower:
