@@ -35,7 +35,7 @@ services:
     ports:
       - 32400:32400
     volumes:
-      - ./data:/data
+      - ./downloads:/data
 
   plexpy:
     container_name: plexpy
@@ -49,7 +49,7 @@ services:
     environment: *environment
     hostname: *hostname
     volumes:
-      - ./data:/downloads
+      - ./downloads:/downloads
 
   sonarr:
     container_name: sonarr
@@ -57,7 +57,7 @@ services:
     environment: *environment
     hostname: *hostname
     volumes:
-      - ./data:/downloads
+      - ./downloads:/downloads
 
   transmission:
     container_name: transmission
@@ -66,7 +66,7 @@ services:
     hostname: *hostname
     volumes:
       - ./transmission-web:/usr/share/transmission/web
-      - ./data:/downloads
+      - ./downloads:/downloads
 
   watchtower:
     container_name: watchtower

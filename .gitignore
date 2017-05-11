@@ -1,8 +1,6 @@
 # Apache
 /apache/httpd-secrets.conf
 
-# Transmission
+# Volumes
+/downloads
 /transmission-web
-
-# Data
-/data
