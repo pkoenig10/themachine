@@ -48,12 +48,16 @@ services:
     image: linuxserver/radarr
     environment: *environment
     hostname: *hostname
+    volumes:
+      - ./data:/downloads
 
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
     environment: *environment
     hostname: *hostname
+    volumes:
+      - ./data:/downloads
 
   transmission:
     container_name: transmission
@@ -62,7 +66,7 @@ services:
     hostname: *hostname
     volumes:
       - ./transmission-web:/usr/share/transmission/web
-      - ./data/downloads:/downloads
+      - ./data:/downloads
 
   watchtower:
     container_name: watchtower
