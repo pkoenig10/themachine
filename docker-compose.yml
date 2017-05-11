@@ -33,7 +33,7 @@ services:
     environment: *environment
     hostname: *hostname
     ports:
-      - 127.0.0.1:32400:32400
+      - 32400:32400
     volumes:
       - ./data:/data
 
