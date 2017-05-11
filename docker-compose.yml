@@ -6,6 +6,10 @@ services:
     build: ./apache
     environment: &environment
       TZ: America/Los_Angeles
+      PUID: 1000
+      PGID: 1000
+      PLEX_UID: 1000
+      PLEX_GID: 1000
     hostname: &hostname themachine
     ports:
       - 80:80
