@@ -3,7 +3,7 @@ version: '3'
 services:
   apache:
     container_name: apache
-    build: ./apache
+    image: pkoenig10/httpd-openidc
     environment: &environment
       TZ: America/Los_Angeles
       PUID: 1000
