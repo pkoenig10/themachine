@@ -81,6 +81,7 @@ services:
     hostname: *hostname
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
 volumes:
   letsencrypt:
