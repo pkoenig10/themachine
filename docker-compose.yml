@@ -23,7 +23,7 @@ services:
 
   netdata:
     container_name: netdata
-    image: titpetric/netdata
+    build: ./netdata
     environment: *environment
     hostname: *hostname
     volumes:
@@ -31,6 +31,7 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt:/mnt:ro
+      - ./netdata/fping.conf:/etc/netdata/fping.conf
 
   plex:
     container_name: plex
