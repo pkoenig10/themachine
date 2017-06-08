@@ -74,7 +74,7 @@ services:
 
   transmission:
     container_name: transmission
-    image: linuxserver/transmission:latest
+    image: linuxserver/transmission
     environment: *environment
     hostname: *hostname
     restart: unless-stopped
