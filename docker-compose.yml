@@ -11,6 +11,7 @@ services:
       PLEX_UID: 1000
       PLEX_GID: 1000
     hostname: &hostname themachine
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -26,6 +27,7 @@ services:
     build: ./netdata
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -39,6 +41,7 @@ services:
     image: plexinc/pms-docker:plexpass
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     ports:
       - 32400:32400
     volumes:
@@ -49,12 +52,14 @@ services:
     image: linuxserver/plexpy
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
 
   radarr:
     container_name: radarr
     image: linuxserver/radarr
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - ./downloads:/downloads
 
@@ -63,6 +68,7 @@ services:
     image: linuxserver/sonarr
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - ./downloads:/downloads
 
@@ -71,6 +77,7 @@ services:
     image: linuxserver/transmission:latest
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - ./transmission-web:/usr/share/transmission/web:ro
       - ./downloads:/downloads
@@ -81,6 +88,7 @@ services:
     command: --schedule "0 0 4 * * *" --cleanup
     environment: *environment
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
