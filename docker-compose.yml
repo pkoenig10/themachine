@@ -29,12 +29,13 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /data:/data
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - /mnt:/mnt:ro
-      - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf
-      - ./netdata/fping.conf:/etc/netdata/fping.conf
+      - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
+      - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
+      - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
 
   plex:
     container_name: plex
