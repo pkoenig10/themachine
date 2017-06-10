@@ -36,6 +36,7 @@ services:
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
+      - ./netdata/apache.conf:/etc/netdata/python.d/apache.conf:ro
 
   plex:
     container_name: plex
