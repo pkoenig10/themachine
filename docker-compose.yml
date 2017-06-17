@@ -27,16 +27,28 @@ services:
     build: ./netdata
     environment: *environment
     hostname: *hostname
+    privileged: true
     restart: unless-stopped
     volumes:
       - /data:/data
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/shm/fakenet:/host/proc/net:ro
+      - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
-      - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apache.conf:/etc/netdata/python.d/apache.conf:ro
+
+  fakenet:
+    container_name: fakenet
+    build: ./fakenet
+    environment: *environment
+    hostname: *hostname
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /dev/shm/fakenet:/dev/shm/fakenet
 
   plex:
     container_name: plex
