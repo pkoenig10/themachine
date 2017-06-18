@@ -43,7 +43,7 @@ services:
 
   fakenet:
     container_name: fakenet
-    build: ./fakenet
+    image: pkoenig10/fakenet
     network_mode: host
     restart: unless-stopped
     volumes:
