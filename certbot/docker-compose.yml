@@ -4,7 +4,18 @@ services:
   certbot:
     container_name: certbot
     image: certbot/certbot
-    command: certonly -c /etc/letencrypt/cli.ini
+    command: >
+      certonly
+      --config /etc/letencrypt/cli.ini
+      --email $EMAIL
+      --cert-name $DOMAIN
+      --domains $DOMAIN
+      --domains netdata.$DOMAIN
+      --domains plex.$DOMAIN
+      --domains plexpy.$DOMAIN
+      --domains tv.$DOMAIN
+      --domains movies.$DOMAIN
+      --domains transmission.$DOMAIN
     ports:
       - 80:80
       - 443:443

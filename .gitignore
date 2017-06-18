@@ -1,5 +1,5 @@
-# Apache
-/apache/httpd-secrets.conf
+# Environment variables
+/.env
 
 # Volumes
 /downloads

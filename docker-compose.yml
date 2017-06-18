@@ -4,20 +4,20 @@ services:
   apache:
     container_name: apache
     image: pkoenig10/httpd-openidc
-    environment: &environment
-      TZ: America/Los_Angeles
-      PUID: 1000
-      PGID: 1000
-      PLEX_UID: 1000
-      PLEX_GID: 1000
-    hostname: &hostname themachine
+    environment:
+      TZ: $TZ
+      DOMAIN: $DOMAIN
+      PASSPHRASE: $PASSPHRASE
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
+      USERS: $USERS
+    hostname: &hostname $HOSTNAME
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - ./apache/httpd-secrets.conf:/usr/local/apache2/conf/extra/httpd-secrets.conf:ro
       - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
       - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
       - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
@@ -25,7 +25,8 @@ services:
   netdata:
     container_name: netdata
     build: ./netdata
-    environment: *environment
+    environment:
+      TZ: $TZ
     hostname: *hostname
     privileged: true
     restart: unless-stopped
@@ -43,8 +44,6 @@ services:
   fakenet:
     container_name: fakenet
     build: ./fakenet
-    environment: *environment
-    hostname: *hostname
     network_mode: host
     restart: unless-stopped
     volumes:
@@ -53,7 +52,10 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker:plexpass
-    environment: *environment
+    environment:
+      TZ: $TZ
+      PLEX_UID: $UID
+      PLEX_GID: $GID
     hostname: *hostname
     restart: unless-stopped
     ports:
@@ -64,14 +66,17 @@ services:
   plexpy:
     container_name: plexpy
     image: linuxserver/plexpy
-    environment: *environment
+    environment: &environment-linuxserver
+      TZ: $TZ
+      PUID: $UID
+      PGID: $GID
     hostname: *hostname
     restart: unless-stopped
 
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    environment: *environment
+    environment: *environment-linuxserver
     hostname: *hostname
     restart: unless-stopped
     volumes:
@@ -80,7 +85,7 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    environment: *environment
+    environment: *environment-linuxserver
     hostname: *hostname
     restart: unless-stopped
     volumes:
@@ -89,7 +94,7 @@ services:
   transmission:
     container_name: transmission
     image: linuxserver/transmission
-    environment: *environment
+    environment: *environment-linuxserver
     hostname: *hostname
     restart: unless-stopped
     volumes:
@@ -99,9 +104,9 @@ services:
   watchtower:
     container_name: watchtower
     image: v2tec/watchtower
-    command: --schedule "0 0 4 * * *" --cleanup
-    environment: *environment
-    hostname: *hostname
+    command: >
+      --schedule "0 0 4 * * *"
+      --cleanup
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
