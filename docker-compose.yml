@@ -24,7 +24,7 @@ services:
 
   netdata:
     container_name: netdata
-    build: ./netdata
+    image: pkoenig10/netdata
     environment:
       TZ: $TZ
     hostname: *hostname
