@@ -49,6 +49,16 @@ services:
     volumes:
       - /dev/shm/fakenet:/dev/shm/fakenet
 
+  influxdb:
+    container_name: influxdb
+    image: influxdb
+    environment:
+      TZ: $TZ
+    hostname: *hostname
+    volumes:
+      - $DATA_DIR/influxdb:/var/lib/influxdb
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+
   plex:
     container_name: plex
     image: plexinc/pms-docker:plexpass
