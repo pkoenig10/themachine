@@ -31,11 +31,11 @@ services:
     privileged: true
     restart: unless-stopped
     volumes:
-      - /data:/data
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/shm/fakenet:/host/proc/net:ro
+      - $DATA_DIR:/data
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
@@ -61,7 +61,9 @@ services:
     ports:
       - 32400:32400
     volumes:
-      - ./downloads:/data
+      - $CONFIG_DIR/plex/config:/config
+      - $DATA_DIR/tv:/tv
+      - $DATA_DIR/movies:/movies
 
   plexpy:
     container_name: plexpy
@@ -72,6 +74,8 @@ services:
       PGID: $GID
     hostname: *hostname
     restart: unless-stopped
+    volumes:
+      - $CONFIG_DIR/plexpy/config:/config
 
   radarr:
     container_name: radarr
@@ -80,7 +84,9 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - ./downloads:/downloads
+      - $CONFIG_DIR/radarr/config:/config
+      - $DATA_DIR/downloads:/downloads
+      - $DATA_DIR/movies:/movies
 
   sonarr:
     container_name: sonarr
@@ -89,7 +95,9 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - ./downloads:/downloads
+      - $CONFIG_DIR/sonarr/config:/config
+      - $DATA_DIR/downloads:/downloads
+      - $DATA_DIR/tv:/tv
 
   transmission:
     container_name: transmission
@@ -98,8 +106,9 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - ./transmission-web:/usr/share/transmission/web:ro
-      - ./downloads:/downloads
+      - $CONFIG_DIR/transmission/config:/config
+      - $DATA_DIR/downloads:/downloads
+      - $TRANSMISSION_WEB_DIR:/usr/share/transmission/web:ro
 
   watchtower:
     container_name: watchtower

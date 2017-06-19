@@ -1,6 +1,2 @@
 # Environment variables
 /.env
-
-# Volumes
-/downloads
-/transmission-web
