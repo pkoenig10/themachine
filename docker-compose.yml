@@ -17,10 +17,11 @@ services:
       - 80:80
       - 443:443
     volumes:
+      - apache-logs:/usr/local/apache2/logs
+      - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
       - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
-      - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
 
   netdata:
     container_name: netdata
@@ -35,11 +36,13 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/shm/fakenet:/host/proc/net:ro
+      - apache-logs:/var/log/apache2:ro
       - $DATA_DIR:/data
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
       - ./netdata/apache.conf:/etc/netdata/python.d/apache.conf:ro
+      - ./netdata/web_log.conf:/etc/netdata/python.d/web_log.conf:ro
 
   fakenet:
     container_name: fakenet
@@ -144,5 +147,6 @@ services:
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
 volumes:
+  apache-logs:
   letsencrypt:
     external: true
