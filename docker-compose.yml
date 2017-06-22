@@ -55,9 +55,21 @@ services:
     environment:
       TZ: $TZ
     hostname: *hostname
+    restart: unless-stopped
     volumes:
       - $DATA_DIR/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+
+  grafana:
+    container_name: grafana
+    image: pkoenig10/grafana
+    environment:
+      TZ: $TZ
+    hostname: *hostname
+    restart: unless-stopped
+    volumes:
+      - $DATA_DIR/grafana:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
 
   plex:
     container_name: plex

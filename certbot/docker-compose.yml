@@ -11,6 +11,7 @@ services:
       --cert-name $DOMAIN
       --domains $DOMAIN
       --domains netdata.$DOMAIN
+      --domains grafana.$DOMAIN
       --domains plex.$DOMAIN
       --domains plexpy.$DOMAIN
       --domains tv.$DOMAIN
