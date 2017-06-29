@@ -138,6 +138,8 @@ services:
   watchtower:
     container_name: watchtower
     image: v2tec/watchtower
+    environment:
+      TZ: $TZ
     command: >
       --schedule "0 0 4 * * *"
       --cleanup
