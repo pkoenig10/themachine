@@ -71,7 +71,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $DATA_DIR/grafana:/var/lib/grafana
+      - $CONFIG_DIR/grafana:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
 
   plex:
