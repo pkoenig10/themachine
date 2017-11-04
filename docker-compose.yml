@@ -124,6 +124,15 @@ services:
       - $DATA_DIR/downloads:/downloads
       - $DATA_DIR/tv:/tv
 
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett
+    environment: *environment-linuxserver
+    hostname: *hostname
+    restart: unless-stopped
+    volumes:
+      - $CONFIG_DIR/jackett/config:/config
+
   transmission:
     container_name: transmission
     image: linuxserver/transmission
