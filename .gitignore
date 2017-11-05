@@ -1,2 +1,5 @@
 # Environment variables
 /.env
+
+# Authenticated emails
+/oauth2_proxy/authenticated-emails

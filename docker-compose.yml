@@ -1,26 +1,41 @@
 version: '3'
 
 services:
+  oauth2_proxy:
+    container_name: oauth2_proxy
+    image: a5huynh/oauth2_proxy
+    environment:
+      TZ: $TZ
+      DOMAIN: $DOMAIN
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
+      COOKIE_SECRET: $COOKIE_SECRET
+    command: >
+      -config=/etc/oauth2_proxy/oauth2_proxy.cfg
+      -client-id=$CLIENT_ID
+      -client-secret=$CLIENT_SECRET
+      -cookie-secret=$COOKIE_SECRET
+      -tls-cert=/etc/letsencrypt/live/$DOMAIN/fullchain.pem
+      -tls-key=/etc/letsencrypt/live/$DOMAIN/privkey.pem
+    hostname: &hostname $HOSTNAME
+    restart: unless-stopped
+    ports:
+      - 443:443
+    volumes:
+      - letsencrypt:/etc/letsencrypt:ro
+      - ./oauth2_proxy:/etc/oauth2_proxy:ro
+
   apache:
     container_name: apache
     image: pkoenig10/httpd-openidc
     environment:
       TZ: $TZ
       DOMAIN: $DOMAIN
-      PASSPHRASE: $PASSPHRASE
-      CLIENT_ID: $CLIENT_ID
-      CLIENT_SECRET: $CLIENT_SECRET
-      USERS: $USERS
-    hostname: &hostname $HOSTNAME
+    hostname: *hostname
     restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
     volumes:
       - apache-logs:/usr/local/apache2/logs
-      - letsencrypt:/usr/local/apache2/conf/letsencrypt:ro
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - ./apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
       - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
 
   netdata:
