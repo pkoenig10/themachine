@@ -16,7 +16,7 @@ services:
       --domains plexpy.$DOMAIN
       --domains tv.$DOMAIN
       --domains movies.$DOMAIN
-      --domains trackers.$DOMAIN
+      --domains jackett.$DOMAIN
       --domains transmission.$DOMAIN
     ports:
       - 80:80
