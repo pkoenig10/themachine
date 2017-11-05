@@ -1,12 +1,28 @@
 version: '3'
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    environment:
+      TZ: $TZ
+    hostname: &hostname $HOSTNAME
+    restart: unless-stopped
+    ports:
+    - 80:80
+    - 443:443
+    volumes:
+      - nginx-logs:/var/log/nginx
+      - letsencrypt:/etc/nginx/letsencrypt:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
+      - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
+
   oauth2_proxy:
     container_name: oauth2_proxy
     image: a5huynh/oauth2_proxy
     environment:
       TZ: $TZ
-      DOMAIN: $DOMAIN
       CLIENT_ID: $CLIENT_ID
       CLIENT_SECRET: $CLIENT_SECRET
       COOKIE_SECRET: $COOKIE_SECRET
@@ -15,28 +31,11 @@ services:
       -client-id=$CLIENT_ID
       -client-secret=$CLIENT_SECRET
       -cookie-secret=$COOKIE_SECRET
-      -tls-cert=/etc/letsencrypt/live/$DOMAIN/fullchain.pem
-      -tls-key=/etc/letsencrypt/live/$DOMAIN/privkey.pem
-    hostname: &hostname $HOSTNAME
-    restart: unless-stopped
-    ports:
-      - 443:443
-    volumes:
-      - letsencrypt:/etc/letsencrypt:ro
-      - ./oauth2_proxy:/etc/oauth2_proxy:ro
-
-  apache:
-    container_name: apache
-    image: pkoenig10/httpd-openidc
-    environment:
-      TZ: $TZ
-      DOMAIN: $DOMAIN
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - apache-logs:/usr/local/apache2/logs
-      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
+      - letsencrypt:/etc/letsencrypt:ro
+      - ./oauth2_proxy:/etc/oauth2_proxy:ro
 
   netdata:
     container_name: netdata
@@ -51,12 +50,12 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/shm/fakenet:/host/proc/net:ro
-      - apache-logs:/var/log/apache2:ro
+      - nginx-logs:/var/log/nginx:ro
       - $DATA_DIR:/data
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
-      - ./netdata/apache.conf:/etc/netdata/python.d/apache.conf:ro
+      - ./netdata/nginx.conf:/etc/netdata/python.d/nginx.conf:ro
       - ./netdata/web_log.conf:/etc/netdata/python.d/web_log.conf:ro
 
   fakenet:
@@ -173,6 +172,6 @@ services:
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
 volumes:
-  apache-logs:
+  nginx-logs:
   letsencrypt:
     external: true
