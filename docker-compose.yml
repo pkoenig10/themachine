@@ -6,6 +6,10 @@ services:
     image: nginx
     environment:
       TZ: $TZ
+      DOMAIN: $DOMAIN
+    command: >
+      /bin/bash -c
+      "envsubst '$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
     restart: unless-stopped
     ports:
@@ -14,7 +18,7 @@ services:
     volumes:
       - nginx-logs:/var/log/nginx
       - letsencrypt:/etc/letsencrypt:ro
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
 
