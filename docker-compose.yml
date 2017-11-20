@@ -38,7 +38,6 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - letsencrypt:/etc/letsencrypt:ro
       - ./oauth2_proxy:/etc/oauth2_proxy:ro
 
   netdata:
