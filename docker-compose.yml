@@ -91,6 +91,18 @@ services:
       - $CONFIG_DIR/grafana:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
 
+  iperf:
+    container_name: iperf
+    image: networkstatic/iperf3
+    environment:
+      TZ: $TZ
+    command: >
+      -s
+    hostname: *hostname
+    restart: unless-stopped
+    ports:
+      - 5201:5201
+
   plex:
     container_name: plex
     image: plexinc/pms-docker:plexpass
