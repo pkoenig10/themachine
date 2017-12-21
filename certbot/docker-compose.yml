@@ -18,6 +18,7 @@ services:
       --domains movies.$DOMAIN
       --domains jackett.$DOMAIN
       --domains transmission.$DOMAIN
+      --domains spyfall.$DOMAIN
     ports:
       - 80:80
       - 443:443

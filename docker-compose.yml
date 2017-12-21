@@ -161,6 +161,23 @@ services:
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/usr/share/transmission/web:ro
 
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    environment:
+      TZ: $TZ
+    hostname: *hostname
+    restart: unless-stopped
+
+  spyfall:
+    container_name: spyfall
+    image: noamokman/spyfall
+    environment:
+      TZ: $TZ
+      MONGO_URL: mongodb://mongodb
+    hostname: *hostname
+    restart: unless-stopped
+
   watchtower:
     container_name: watchtower
     image: v2tec/watchtower
