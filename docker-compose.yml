@@ -13,8 +13,8 @@ services:
     hostname: &hostname $HOSTNAME
     restart: unless-stopped
     ports:
-    - 80:80
-    - 443:443
+      - 80:80
+      - 443:443
     volumes:
       - nginx-logs:/var/log/nginx/logs
       - letsencrypt:/etc/letsencrypt:ro
