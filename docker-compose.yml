@@ -84,7 +84,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: pkoenig10/grafana
+    image: grafana/grafana
     environment:
       TZ: $TZ
     hostname: *hostname
@@ -92,6 +92,7 @@ services:
     volumes:
       - $CONFIG_DIR/grafana:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/influxdb.yaml:/etc/grafana/provisioning/datasources/influxdb.yaml:ro
 
   iperf:
     container_name: iperf
