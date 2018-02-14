@@ -168,13 +168,15 @@ services:
   transmission:
     container_name: transmission
     image: linuxserver/transmission
-    environment: *environment-linuxserver
+    environment:
+      <<: *environment-linuxserver
+      TRANSMISSION_WEB_HOME: /web
     hostname: *hostname
     restart: unless-stopped
     volumes:
       - $CONFIG_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/downloads
-      - $TRANSMISSION_WEB_DIR:/usr/share/transmission/web:ro
+      - $TRANSMISSION_WEB_DIR:/web:ro
 
   mongodb:
     container_name: mongodb
