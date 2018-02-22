@@ -17,7 +17,7 @@ services:
       --domains tv.$DOMAIN
       --domains movies.$DOMAIN
       --domains jackett.$DOMAIN
-      --domains transmission.$DOMAIN
+      --domains downloads.$DOMAIN
       --domains spyfall.$DOMAIN
     ports:
       - 80:80
