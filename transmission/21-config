@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+IFS=":" read username password <<< $(base64 -d <<< $BASIC_AUTH)
+
+TMP=$(mktemp)
+jq .[\"rpc-username\"]=\"$username\" /config/settings.json > $TMP; mv $TMP /config/settings.json
+jq .[\"rpc-password\"]=\"$password\" /config/settings.json > $TMP; mv $TMP /config/settings.json
+rm -f $TMP

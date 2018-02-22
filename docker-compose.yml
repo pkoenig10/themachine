@@ -7,9 +7,12 @@ services:
     environment:
       TZ: $TZ
       DOMAIN: $DOMAIN
+      BASIC_AUTH: $BASIC_AUTH
     command: >
       /bin/bash -c
-      "envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+      "envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
+       envsubst '$$BASIC_AUTH' < etc/nginx/proxy-auth-header.conf.template > /etc/nginx/proxy-auth-header.conf &&
+       nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
     restart: unless-stopped
     ports:
@@ -21,6 +24,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
+      - ./nginx/proxy-auth-header.conf:/etc/nginx/proxy-auth-header.conf.template:ro
       - ./nginx/proxy-header.conf:/etc/nginx/proxy-header.conf:ro
       - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
 
@@ -170,10 +174,12 @@ services:
     image: linuxserver/transmission
     environment:
       <<: *environment-linuxserver
+      BASIC_AUTH: $BASIC_AUTH
       TRANSMISSION_WEB_HOME: /web
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - ./transmission/21-config:/etc/cont-init.d/21-config:ro
       - $CONFIG_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
