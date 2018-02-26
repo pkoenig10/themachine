@@ -31,7 +31,7 @@ services:
     image: pkoenig10/dbxcli-backup
     environment:
       TZ: $TZ
-      NAME: $DOMAIN
+      NAME: $HOSTNAME
     volumes:
       - $CONFIG_DIR:/files
       - ../backup/backup.conf:/etc/backup/backup.conf
