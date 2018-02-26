@@ -180,7 +180,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - ./transmission/21-config:/etc/cont-init.d/21-config:ro
+      - ./transmission/config:/etc/cont-init.d/30-config:ro
       - $CONFIG_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
