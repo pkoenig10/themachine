@@ -127,9 +127,9 @@ services:
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
 
-  plexpy:
-    container_name: plexpy
-    image: linuxserver/plexpy
+  tautulli:
+    container_name: tautulli
+    image: linuxserver/tautulli
     environment: &environment-linuxserver
       TZ: $TZ
       PUID: $UID
@@ -137,7 +137,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/plexpy/config:/config
+      - $CONFIG_DIR/tautulli/config:/config
 
   radarr:
     container_name: radarr

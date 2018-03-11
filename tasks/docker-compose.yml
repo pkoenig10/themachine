@@ -13,7 +13,7 @@ services:
       --domains netdata.$DOMAIN
       --domains grafana.$DOMAIN
       --domains plex.$DOMAIN
-      --domains plexpy.$DOMAIN
+      --domains tautulli.$DOMAIN
       --domains tv.$DOMAIN
       --domains movies.$DOMAIN
       --domains jackett.$DOMAIN
