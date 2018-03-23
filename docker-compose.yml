@@ -83,7 +83,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $DATA_DIR/influxdb:/var/lib/influxdb
+      - $CONFIG_DIR/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   grafana:
