@@ -139,6 +139,15 @@ services:
     volumes:
       - $CONFIG_DIR/tautulli/config:/config
 
+  ombi:
+    container_name: ombi
+    image: linuxserver/ombi
+    environment: *environment-linuxserver
+    hostname: *hostname
+    restart: unless-stopped
+    volumes:
+      - $CONFIG_DIR/ombi/config:/config
+
   radarr:
     container_name: radarr
     image: linuxserver/radarr
