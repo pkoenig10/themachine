@@ -117,6 +117,7 @@ services:
       TZ: $TZ
       PLEX_UID: $UID
       PLEX_GID: $GID
+      ADVERTISE_IP: http://$PLEX_IP:32400
       ALLOWED_NETWORKS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
     hostname: *hostname
     restart: unless-stopped
