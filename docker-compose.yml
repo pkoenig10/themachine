@@ -123,6 +123,8 @@ services:
     restart: unless-stopped
     ports:
       - 32400:32400
+    devices:
+      - /dev/dri
     volumes:
       - $CONFIG_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
