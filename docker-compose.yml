@@ -7,11 +7,11 @@ services:
     environment:
       TZ: $TZ
       DOMAIN: $DOMAIN
-      BASIC_AUTH: $BASIC_AUTH
     command: >
       /bin/bash -c
-      "envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
+      "BASIC_AUTH=$$(echo -n $USERNAME:$PASSWORD | base64) \
        envsubst '$$BASIC_AUTH' < etc/nginx/proxy-auth-header.conf.template > /etc/nginx/proxy-auth-header.conf &&
+       envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
     restart: unless-stopped
@@ -184,16 +184,31 @@ services:
 
   transmission:
     container_name: transmission
-    image: linuxserver/transmission
+    image: haugene/transmission-openvpn:dev
     environment:
-      <<: *environment-linuxserver
-      BASIC_AUTH: $BASIC_AUTH
+      TZ: $TZ
+      OPENVPN_PROVIDER: $OPENVPN_PROVIDER
+      OPENVPN_CONFIG: $OPENVPN_CONFIG
+      OPENVPN_USERNAME: $OPENVPN_USERNAME
+      OPENVPN_PASSWORD: $OPENVPN_PASSWORD
+      TRANSMISSION_DOWNLOAD_DIR: /downloads/complete
+      TRANSMISSION_INCOMPLETE_DIR: /downloads/incomplete
+      TRANSMISSION_RATIO_LIMIT: 0
+      TRANSMISSION_RATIO_LIMIT_ENABLED: "true"
+      TRANSMISSION_RPC_AUTHENTICATION_REQUIRED: "true"
+      TRANSMISSION_RPC_USERNAME: $USERNAME
+      TRANSMISSION_RPC_PASSWORD: $PASSWORD
+      TRANSMISSION_HOME: /transmission
       TRANSMISSION_WEB_HOME: /web
     hostname: *hostname
+    cap_add:
+      - NET_ADMIN
     restart: unless-stopped
+    dns: 1.1.1.1
+    devices:
+      - /dev/net/tun
     volumes:
-      - ./transmission/config:/etc/cont-init.d/30-config:ro
-      - $CONFIG_DIR/transmission/config:/config
+      - $CONFIG_DIR/transmission:/transmission
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
 
