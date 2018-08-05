@@ -45,6 +45,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./oauth2_proxy:/etc/oauth2_proxy:ro
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
   netdata:
     container_name: netdata
@@ -211,6 +212,7 @@ services:
       - $CONFIG_DIR/transmission:/transmission
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
   mongodb:
     container_name: mongodb
@@ -240,7 +242,6 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
 volumes:
   nginx-logs:
