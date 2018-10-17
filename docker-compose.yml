@@ -49,7 +49,7 @@ services:
 
   netdata:
     container_name: netdata
-    image: pkoenig10/netdata
+    image: netdata/netdata
     environment:
       TZ: $TZ
     hostname: *hostname
