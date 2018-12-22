@@ -52,6 +52,7 @@ services:
     image: netdata/netdata
     environment:
       TZ: $TZ
+      PGID: $DOCKER_GID
     hostname: *hostname
     privileged: true
     restart: unless-stopped
