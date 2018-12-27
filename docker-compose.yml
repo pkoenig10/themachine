@@ -134,7 +134,7 @@ services:
 
   tautulli:
     container_name: tautulli
-    image: linuxserver/tautulli
+    image: tautulli/tautulli
     environment: &environment-linuxserver
       TZ: $TZ
       PUID: $UID
