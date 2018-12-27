@@ -177,7 +177,7 @@ services:
 
   transmission:
     container_name: transmission
-    image: haugene/transmission-openvpn:dev
+    image: haugene/transmission-openvpn
     environment:
       TZ: $TZ
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
