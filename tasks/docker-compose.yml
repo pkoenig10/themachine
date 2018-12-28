@@ -13,7 +13,7 @@ services:
       --domains *.$DOMAIN
     volumes:
       - ../certbot/cli.ini:/etc/letencrypt/cli.ini:ro
-      - letsencrypt:/etc/letsencrypt
+      - $SERVER_DIR/letsencrypt:/etc/letsencrypt
 
   backup:
     container_name: backup
@@ -22,11 +22,6 @@ services:
       TZ: $TZ
       NAME: $HOSTNAME
     volumes:
-      - $CONFIG_DIR:/files
+      - $SERVER_DIR:/files
+      - $SERVER_DIR/dbxcli:/root/.config/dbxcli
       - ../backup/backup.conf:/etc/backup/backup.conf
-      - dbxcli:/root/.config/dbxcli
-
-volumes:
-  letsencrypt:
-    external: true
-  dbxcli:

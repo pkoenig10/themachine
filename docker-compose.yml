@@ -19,8 +19,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - nginx-logs:/var/log/nginx/logs
-      - letsencrypt:/etc/letsencrypt:ro
+      - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
+      - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
@@ -61,7 +61,7 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/shm/fakenet:/host/proc/net:ro
-      - nginx-logs:/var/log/nginx:ro
+      - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
       - $DATA_DIR:/data
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
@@ -85,7 +85,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/influxdb:/var/lib/influxdb
+      - $SERVER_DIR/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   grafana:
@@ -96,7 +96,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/grafana:/var/lib/grafana
+      - $SERVER_DIR/grafana:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
 
@@ -128,7 +128,7 @@ services:
     devices:
       - /dev/dri
     volumes:
-      - $CONFIG_DIR/plex/config:/config
+      - $SERVER_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
 
@@ -142,7 +142,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/tautulli/config:/config
+      - $SERVER_DIR/tautulli/config:/config
 
   radarr:
     container_name: radarr
@@ -151,7 +151,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/radarr/config:/config
+      - $SERVER_DIR/radarr/config:/config
       - $DATA_DIR/downloads:/downloads
       - $DATA_DIR/movies:/movies
 
@@ -162,7 +162,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/sonarr/config:/config
+      - $SERVER_DIR/sonarr/config:/config
       - $DATA_DIR/downloads:/downloads
       - $DATA_DIR/tv:/tv
 
@@ -173,7 +173,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
-      - $CONFIG_DIR/jackett/config:/config
+      - $SERVER_DIR/jackett/config:/config
 
   transmission:
     container_name: transmission
@@ -201,7 +201,7 @@ services:
     devices:
       - /dev/net/tun
     volumes:
-      - $CONFIG_DIR/transmission:/transmission
+      - $SERVER_DIR/transmission:/transmission
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
@@ -225,8 +225,3 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-volumes:
-  nginx-logs:
-  letsencrypt:
-    external: true
