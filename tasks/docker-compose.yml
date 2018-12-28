@@ -9,6 +9,7 @@ services:
       --config /etc/letencrypt/cli.ini
       --email $EMAIL
       --cert-name $DOMAIN
+      --domains $DOMAIN
       --domains *.$DOMAIN
     volumes:
       - ../certbot/cli.ini:/etc/letencrypt/cli.ini:ro
