@@ -6,14 +6,13 @@ services:
     image: certbot/certbot
     command: >
       certonly
-      --config /etc/letencrypt/cli.ini
       --email $EMAIL
       --cert-name $DOMAIN
       --domains $DOMAIN
       --domains *.$DOMAIN
     volumes:
-      - ../certbot/cli.ini:/etc/letencrypt/cli.ini:ro
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
+      - ../certbot/cli.ini:/etc/letsencrypt/cli.ini:ro
 
   backup:
     container_name: backup
