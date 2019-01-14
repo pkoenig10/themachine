@@ -54,13 +54,15 @@ services:
       TZ: $TZ
       PGID: $DOCKER_GID
     hostname: *hostname
-    privileged: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
     restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/shm/fakenet:/host/proc/net:ro
       - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
       - $DATA_DIR:/data
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
@@ -68,14 +70,6 @@ services:
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
       - ./netdata/nginx.conf:/etc/netdata/python.d/nginx.conf:ro
       - ./netdata/web_log.conf:/etc/netdata/python.d/web_log.conf:ro
-
-  fakenet:
-    container_name: fakenet
-    image: pkoenig10/fakenet
-    network_mode: host
-    restart: unless-stopped
-    volumes:
-      - /dev/shm/fakenet:/dev/shm/fakenet
 
   influxdb:
     container_name: influxdb
