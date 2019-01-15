@@ -5,7 +5,6 @@ services:
     container_name: nginx
     image: nginx
     environment:
-      TZ: $TZ
       DOMAIN: $DOMAIN
     command: >
       /bin/bash -c
@@ -19,6 +18,7 @@ services:
       - 80:80
       - 443:443
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
@@ -32,7 +32,6 @@ services:
     container_name: oauth2_proxy
     image: a5huynh/oauth2_proxy
     environment:
-      TZ: $TZ
       CLIENT_ID: $CLIENT_ID
       CLIENT_SECRET: $CLIENT_SECRET
       COOKIE_SECRET: $COOKIE_SECRET
@@ -44,14 +43,13 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./oauth2_proxy:/etc/oauth2_proxy:ro
-      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
   netdata:
     container_name: netdata
     image: netdata/netdata
     environment:
-      TZ: $TZ
       PGID: $DOCKER_GID
     hostname: *hostname
     cap_add:
@@ -60,6 +58,7 @@ services:
       - apparmor:unconfined
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -74,22 +73,20 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb
-    environment:
-      TZ: $TZ
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   grafana:
     container_name: grafana
     image: grafana/grafana
-    environment:
-      TZ: $TZ
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/grafana:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
@@ -97,20 +94,19 @@ services:
   iperf:
     container_name: iperf
     image: networkstatic/iperf3
-    environment:
-      TZ: $TZ
     command: >
       -s
     hostname: *hostname
     restart: unless-stopped
     ports:
       - 5201:5201
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
   plex:
     container_name: plex
     image: plexinc/pms-docker:plexpass
     environment:
-      TZ: $TZ
       PLEX_UID: $UID
       PLEX_GID: $GID
       ADVERTISE_IP: http://$PLEX_IP:32400
@@ -122,6 +118,7 @@ services:
     devices:
       - /dev/dri
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
@@ -129,22 +126,25 @@ services:
   tautulli:
     container_name: tautulli
     image: tautulli/tautulli
-    environment: &environment-linuxserver
-      TZ: $TZ
+    environment:
       PUID: $UID
       PGID: $GID
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/tautulli/config:/config
 
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    environment: *environment-linuxserver
+    environment: &environment-linuxserver
+      PUID: $UID
+      PGID: $GID
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/radarr/config:/config
       - $DATA_DIR/downloads:/downloads
       - $DATA_DIR/movies:/movies
@@ -156,6 +156,7 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/sonarr/config:/config
       - $DATA_DIR/downloads:/downloads
       - $DATA_DIR/tv:/tv
@@ -167,13 +168,13 @@ services:
     hostname: *hostname
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/jackett/config:/config
 
   transmission:
     container_name: transmission
     image: haugene/transmission-openvpn
     environment:
-      TZ: $TZ
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_CONFIG: $OPENVPN_CONFIG
       OPENVPN_USERNAME: $OPENVPN_USERNAME
@@ -195,27 +196,26 @@ services:
     devices:
       - /dev/net/tun
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission:/transmission
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
-      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
   spyfall:
     container_name: spyfall
     image: pkoenig10/spyfall
-    environment:
-      TZ: $TZ
     hostname: *hostname
     restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
   watchtower:
     container_name: watchtower
     image: v2tec/watchtower
-    environment:
-      TZ: $TZ
     command: >
       --schedule "0 0 4 * * *"
       --cleanup
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
