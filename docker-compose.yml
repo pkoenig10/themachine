@@ -4,8 +4,6 @@ services:
   nginx:
     container_name: nginx
     image: nginx
-    environment:
-      DOMAIN: $DOMAIN
     command: >
       /bin/bash -c
       "BASIC_AUTH=$$(echo -n $USERNAME:$PASSWORD | base64) \
@@ -13,6 +11,8 @@ services:
        envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
+    environment:
+      DOMAIN: $DOMAIN
     restart: unless-stopped
     ports:
       - 80:80
@@ -31,16 +31,16 @@ services:
   oauth2_proxy:
     container_name: oauth2_proxy
     image: a5huynh/oauth2_proxy
-    environment:
-      CLIENT_ID: $CLIENT_ID
-      CLIENT_SECRET: $CLIENT_SECRET
-      COOKIE_SECRET: $COOKIE_SECRET
     command: >
       -config=/etc/oauth2_proxy/oauth2_proxy.cfg
       -client-id=$CLIENT_ID
       -client-secret=$CLIENT_SECRET
       -cookie-secret=$COOKIE_SECRET
     hostname: *hostname
+    environment:
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
+      COOKIE_SECRET: $COOKIE_SECRET
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -49,9 +49,9 @@ services:
   netdata:
     container_name: netdata
     image: netdata/netdata
+    hostname: *hostname
     environment:
       PGID: $DOCKER_GID
-    hostname: *hostname
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -106,17 +106,17 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker:plexpass
+    hostname: *hostname
     environment:
       PLEX_UID: $UID
       PLEX_GID: $GID
       ADVERTISE_IP: http://$PLEX_IP:32400
       ALLOWED_NETWORKS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-    hostname: *hostname
+    devices:
+      - /dev/dri
     restart: unless-stopped
     ports:
       - 32400:32400
-    devices:
-      - /dev/dri
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/plex/config:/config
@@ -126,10 +126,10 @@ services:
   tautulli:
     container_name: tautulli
     image: tautulli/tautulli
+    hostname: *hostname
     environment:
       PUID: $UID
       PGID: $GID
-    hostname: *hostname
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -138,10 +138,10 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
+    hostname: *hostname
     environment: &environment-linuxserver
       PUID: $UID
       PGID: $GID
-    hostname: *hostname
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -152,8 +152,8 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    environment: *environment-linuxserver
     hostname: *hostname
+    environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -164,8 +164,8 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    environment: *environment-linuxserver
     hostname: *hostname
+    environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -174,6 +174,7 @@ services:
   transmission:
     container_name: transmission
     image: haugene/transmission-openvpn
+    hostname: *hostname
     environment:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_CONFIG: $OPENVPN_CONFIG
@@ -188,13 +189,12 @@ services:
       TRANSMISSION_RPC_PASSWORD: $PASSWORD
       TRANSMISSION_HOME: /transmission
       TRANSMISSION_WEB_HOME: /web
-    hostname: *hostname
     cap_add:
       - NET_ADMIN
-    restart: unless-stopped
-    dns: 1.1.1.1
     devices:
       - /dev/net/tun
+    dns: 1.1.1.1
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission:/transmission
