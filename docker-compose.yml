@@ -6,8 +6,7 @@ services:
     image: nginx
     command: >
       /bin/bash -c
-      "BASIC_AUTH=$$(echo -n $USERNAME:$PASSWORD | base64) \
-       envsubst '$$BASIC_AUTH' < etc/nginx/proxy-auth-header.conf.template > /etc/nginx/proxy-auth-header.conf &&
+      "echo $USERNAME:{PLAIN}$PASSWORD > /etc/nginx/.htpasswd &&
        envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
@@ -24,7 +23,6 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
-      - ./nginx/proxy-auth-header.conf:/etc/nginx/proxy-auth-header.conf.template:ro
       - ./nginx/proxy-header.conf:/etc/nginx/proxy-header.conf:ro
       - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
 
@@ -205,13 +203,8 @@ services:
       OPENVPN_CONFIG: $OPENVPN_CONFIG
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
-      TRANSMISSION_DOWNLOAD_DIR: /downloads/complete
-      TRANSMISSION_INCOMPLETE_DIR: /downloads/incomplete
       TRANSMISSION_RATIO_LIMIT: 0
       TRANSMISSION_RATIO_LIMIT_ENABLED: "true"
-      TRANSMISSION_RPC_AUTHENTICATION_REQUIRED: "true"
-      TRANSMISSION_RPC_USERNAME: $USERNAME
-      TRANSMISSION_RPC_PASSWORD: $PASSWORD
       TRANSMISSION_HOME: /transmission
       TRANSMISSION_WEB_HOME: /web
     cap_add:
@@ -225,7 +218,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission:/transmission
-      - $DATA_DIR/downloads:/downloads
+      - $DATA_DIR/downloads:/data
       - $TRANSMISSION_WEB_DIR:/web:ro
 
   spyfall:
