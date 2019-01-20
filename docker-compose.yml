@@ -30,22 +30,21 @@ services:
     image: ploxiln/oauth2_proxy
     command: >
       oauth2_proxy
-      -config=/etc/oauth2_proxy/oauth2_proxy.cfg
-      -client-id=$CLIENT_ID
-      -client-secret=$CLIENT_SECRET
-      -cookie-domain=$DOMAIN
-      -cookie-secret=$COOKIE_SECRET
-      -redirect-url=https://auth.$DOMAIN
-      -whitelist-domain=.$DOMAIN
+      -client-id $CLIENT_ID
+      -client-secret $CLIENT_SECRET
+      -cookie-domain $DOMAIN
+      -cookie-secret $COOKIE_SECRET
+      -redirect-url https://auth.$DOMAIN
+      -whitelist-domain .$DOMAIN
+      -http-address :4180
+      -skip-provider-button
+      -scope "openid email"
+      -authenticated-emails-file /authenticated-emails
     hostname: *hostname
-    environment:
-      CLIENT_ID: $CLIENT_ID
-      CLIENT_SECRET: $CLIENT_SECRET
-      COOKIE_SECRET: $COOKIE_SECRET
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./oauth2_proxy:/etc/oauth2_proxy:ro
+      - ./oauth2_proxy/authenticated-emails:/authenticated-emails:ro
 
   netdata:
     container_name: netdata

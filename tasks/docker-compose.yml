@@ -10,9 +10,13 @@ services:
       --cert-name $DOMAIN
       --domains $DOMAIN
       --domains *.$DOMAIN
+      --manual
+      --agree-tos
+      --manual-public-ip-logging-ok
+      --keep-until-expiring
+      --must-staple
     volumes:
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
-      - ../certbot/cli.ini:/etc/letsencrypt/cli.ini:ro
 
   backup:
     container_name: backup
