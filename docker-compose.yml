@@ -21,6 +21,7 @@ services:
       - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
+      - ./nginx/auth-basic.conf:/etc/nginx/auth-basic.conf:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
       - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
