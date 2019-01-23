@@ -202,6 +202,8 @@ services:
       OPENVPN_CONFIG: $OPENVPN_CONFIG
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
+      TRANSMISSION_DOWNLOAD_DIR: /downloads/complete
+      TRANSMISSION_INCOMPLETE_DIR: /downloads/incomplete
       TRANSMISSION_RATIO_LIMIT: 0
       TRANSMISSION_RATIO_LIMIT_ENABLED: "true"
       TRANSMISSION_HOME: /transmission
@@ -217,7 +219,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission:/transmission
-      - $DATA_DIR/downloads:/data
+      - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
 
   spyfall:
