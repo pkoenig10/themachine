@@ -8,7 +8,7 @@ services:
       /bin/bash -c
       "echo $USERNAME:{PLAIN}$PASSWORD > /etc/nginx/.htpasswd &&
        envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
-       nginx -g 'daemon off;'"
+       exec nginx -g 'daemon off;'"
     hostname: &hostname $HOSTNAME
     environment:
       DOMAIN: $DOMAIN
