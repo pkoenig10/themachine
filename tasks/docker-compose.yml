@@ -11,6 +11,7 @@ services:
       --domains $DOMAIN
       --domains *.$DOMAIN
       --manual
+      --preferred-challenges dns
       --agree-tos
       --manual-public-ip-logging-ok
       --keep-until-expiring
