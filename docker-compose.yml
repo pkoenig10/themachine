@@ -95,7 +95,7 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole
-    hostname: *hostname
+    hostname: pihole
     environment:
       ServerIP: 0.0.0.0
       WEBPASSWORD: $PASSWORD
