@@ -41,6 +41,7 @@ services:
       -skip-provider-button
       -scope "openid email"
       -authenticated-emails-file /authenticated-emails
+      -set-xauthrequest
     hostname: *hostname
     restart: unless-stopped
     volumes:
