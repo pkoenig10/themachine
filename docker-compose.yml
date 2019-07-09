@@ -28,9 +28,8 @@ services:
 
   oauth2_proxy:
     container_name: oauth2_proxy
-    image: ploxiln/oauth2_proxy
+    image: quay.io/pusher/oauth2_proxy
     command: >
-      oauth2_proxy
       -client-id $CLIENT_ID
       -client-secret $CLIENT_SECRET
       -cookie-domain $DOMAIN
