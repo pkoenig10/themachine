@@ -3,21 +3,21 @@ version: '3'
 services:
   certbot:
     container_name: certbot
-    image: certbot/certbot
+    image: certbot/dns-cloudflare
     command: >
       certonly
       --email $EMAIL
       --cert-name $DOMAIN
       --domains $DOMAIN
       --domains *.$DOMAIN
-      --manual
-      --preferred-challenges dns
+      --dns-cloudflare
+      --dns-cloudflare-credentials /cloudflare.ini
       --agree-tos
-      --manual-public-ip-logging-ok
       --keep-until-expiring
       --must-staple
     volumes:
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
+      - ../cloudflare/cloudflare.ini:/cloudflare.ini:ro
 
   backup:
     container_name: backup
@@ -27,4 +27,4 @@ services:
     volumes:
       - $SERVER_DIR:/files
       - $SERVER_DIR/dbxcli:/root/.config/dbxcli
-      - ../backup/backup.conf:/etc/backup/backup.conf
+      - ../backup/backup.conf:/etc/backup/backup.conf:ro

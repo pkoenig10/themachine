@@ -1,5 +1,8 @@
 # Environment variables
 /.env
 
+# Cloudflare
+/cloudflare/cloudflare.ini
+
 # Authenticated emails
 /oauth2_proxy/authenticated-emails
