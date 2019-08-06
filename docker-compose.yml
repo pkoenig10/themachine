@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  ddns:
+    container_name: ddns
+    image: joshava/cloudflare-ddns
+    hostname: &hostname $HOSTNAME
+    environment:
+      ZONE: $DOMAIN
+      HOST: $DOMAIN
+      EMAIL: $EMAIL
+      API: $API_KEY
+      PROXY: "false"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
   nginx:
     container_name: nginx
     image: nginx
@@ -9,7 +22,7 @@ services:
       "echo $USERNAME:{PLAIN}$PASSWORD > /etc/nginx/.htpasswd &&
        envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        exec nginx -g 'daemon off;'"
-    hostname: &hostname $HOSTNAME
+    hostname: *hostname
     environment:
       DOMAIN: $DOMAIN
     restart: unless-stopped
