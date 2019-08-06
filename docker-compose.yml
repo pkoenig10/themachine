@@ -4,7 +4,7 @@ services:
   ddns:
     container_name: ddns
     image: joshava/cloudflare-ddns
-    hostname: &hostname $HOSTNAME
+    hostname: $HOSTNAME
     environment:
       ZONE: $DOMAIN
       HOST: $DOMAIN
@@ -22,7 +22,7 @@ services:
       "echo $USERNAME:{PLAIN}$PASSWORD > /etc/nginx/.htpasswd &&
        envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        exec nginx -g 'daemon off;'"
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment:
       DOMAIN: $DOMAIN
     restart: unless-stopped
@@ -54,7 +54,7 @@ services:
       -scope "openid email"
       -authenticated-emails-file /authenticated-emails
       -set-xauthrequest
-    hostname: *hostname
+    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -63,7 +63,7 @@ services:
   netdata:
     container_name: netdata
     image: netdata/netdata
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment:
       PGID: $DOCKER_GID
     cap_add:
@@ -87,7 +87,7 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb
-    hostname: *hostname
+    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -97,7 +97,7 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana
-    hostname: *hostname
+    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -131,7 +131,7 @@ services:
     image: networkstatic/iperf3
     command: >
       -s
-    hostname: *hostname
+    hostname: $HOSTNAME
     restart: unless-stopped
     ports:
       - 5201:5201
@@ -141,7 +141,7 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker:beta
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment:
       PLEX_UID: $UID
       PLEX_GID: $GID
@@ -161,7 +161,7 @@ services:
   tautulli:
     container_name: tautulli
     image: tautulli/tautulli
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment:
       PUID: $UID
       PGID: $GID
@@ -173,7 +173,7 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment: &environment-linuxserver
       PUID: $UID
       PGID: $GID
@@ -187,7 +187,7 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
@@ -199,7 +199,7 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
@@ -209,7 +209,7 @@ services:
   transmission:
     container_name: transmission
     image: haugene/transmission-openvpn
-    hostname: *hostname
+    hostname: $HOSTNAME
     environment:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
@@ -237,7 +237,7 @@ services:
   spyfall:
     container_name: spyfall
     image: pkoenig10/spyfall
-    hostname: *hostname
+    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -248,6 +248,7 @@ services:
     command: >
       --schedule "0 0 4 * * *"
       --cleanup
+    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
