@@ -51,6 +51,7 @@ services:
       -whitelist-domain .$DOMAIN
       -http-address :4180
       -skip-provider-button
+      -approval-prompt auto
       -scope "openid email"
       -authenticated-emails-file /authenticated-emails
       -set-xauthrequest
