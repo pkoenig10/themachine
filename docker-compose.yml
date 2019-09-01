@@ -105,7 +105,6 @@ services:
     image: pihole/pihole
     hostname: pihole
     environment:
-      ServerIP: 0.0.0.0
       WEBPASSWORD: $PASSWORD
     cap_add:
       - NET_ADMIN
@@ -114,8 +113,8 @@ services:
       - 1.1.1.1
     restart: unless-stopped
     ports:
-      - 53:53/tcp
-      - 53:53/udp
+      - $LOCAL_IP:53:53/tcp
+      - $LOCAL_IP:53:53/udp
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/pihole/pihole:/etc/pihole
@@ -140,7 +139,7 @@ services:
     environment:
       PLEX_UID: $UID
       PLEX_GID: $GID
-      ADVERTISE_IP: http://$PLEX_IP:32400
+      ADVERTISE_IP: http://$LOCAL_IP:32400
       ALLOWED_NETWORKS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
     devices:
       - /dev/dri
