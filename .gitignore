@@ -4,5 +4,5 @@
 # Cloudflare
 /cloudflare/cloudflare.ini
 
-# Authenticated emails
-/oauth2_proxy/authenticated-emails
+# Users
+/oidc/users.yml

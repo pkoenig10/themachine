@@ -39,27 +39,21 @@ services:
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
       - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
 
-  oauth2_proxy:
-    container_name: oauth2_proxy
-    image: quay.io/pusher/oauth2_proxy
+  oidc:
+    container_name: oidc
+    image: pkoenig10/oidc-rp
     command: >
       -client-id $CLIENT_ID
       -client-secret $CLIENT_SECRET
-      -cookie-domain $DOMAIN
       -cookie-secret $COOKIE_SECRET
+      -cookie-domain $DOMAIN
       -redirect-url https://auth.$DOMAIN
-      -whitelist-domain .$DOMAIN
-      -http-address :4180
-      -skip-provider-button
-      -approval-prompt auto
-      -scope "openid email"
-      -authenticated-emails-file /authenticated-emails
-      -set-xauthrequest
+      -users-file /users.yml
     hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./oauth2_proxy/authenticated-emails:/authenticated-emails:ro
+      - ./oidc/users.yml:/users.yml:ro
 
   netdata:
     container_name: netdata
