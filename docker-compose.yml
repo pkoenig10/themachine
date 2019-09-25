@@ -5,13 +5,8 @@ services:
     container_name: ddns
     image: joshava/cloudflare-ddns
     hostname: $HOSTNAME
-    environment:
-      ZONE: $DOMAIN
-      HOST: $DOMAIN
-      EMAIL: $EMAIL
-      API: $API_KEY
-      PROXY: "false"
     volumes:
+      - ./ddns/config.yaml:/app/config.yaml:ro
       - /etc/localtime:/etc/localtime:ro
 
   nginx:
