@@ -67,7 +67,7 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
-      - $DATA_DIR:/data
+      - $DATA_DIR:/data:ro
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
       - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
