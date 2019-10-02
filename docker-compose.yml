@@ -207,6 +207,7 @@ services:
       TRANSMISSION_INCOMPLETE_DIR: /downloads/incomplete
       TRANSMISSION_RATIO_LIMIT: 0
       TRANSMISSION_RATIO_LIMIT_ENABLED: "true"
+      TRANSMISSION_WATCH_DIR_ENABLED: "false"
       TRANSMISSION_HOME: /transmission
       TRANSMISSION_WEB_HOME: /web
     cap_add:
