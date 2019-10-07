@@ -70,7 +70,6 @@ services:
       - $DATA_DIR:/data:ro
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
       - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
-      - ./netdata/fping.conf:/etc/netdata/fping.conf:ro
       - ./netdata/nginx.conf:/etc/netdata/python.d/nginx.conf:ro
       - ./netdata/web_log.conf:/etc/netdata/python.d/web_log.conf:ro
 
