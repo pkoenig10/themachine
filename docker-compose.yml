@@ -6,8 +6,8 @@ services:
     image: joshava/cloudflare-ddns
     hostname: $HOSTNAME
     volumes:
-      - ./ddns/config.yaml:/app/config.yaml:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./ddns/config.yaml:/app/config.yaml:ro
 
   nginx:
     container_name: nginx
