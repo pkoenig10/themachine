@@ -40,8 +40,9 @@ services:
     command: >
       -client-id $CLIENT_ID
       -client-secret $CLIENT_SECRET
-      -cookie-secret $COOKIE_SECRET
+      -cookie-key $COOKIE_KEY
       -cookie-domain $DOMAIN
+      -cookie-max-age 672h
       -redirect-url https://auth.$DOMAIN
       -users-file /users.yml
     hostname: $HOSTNAME
