@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   ddns:
@@ -146,6 +146,8 @@ services:
       - $SERVER_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
+    tmpfs:
+      - /transcode
 
   tautulli:
     container_name: tautulli
