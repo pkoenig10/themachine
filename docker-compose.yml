@@ -236,9 +236,9 @@ services:
 
   watchtower:
     container_name: watchtower
-    image: v2tec/watchtower
+    image: containrrr/watchtower
     command: >
-      --schedule "0 0 4 * * *"
+      --schedule "0 0 4 * *"
       --cleanup
     hostname: $HOSTNAME
     restart: unless-stopped
