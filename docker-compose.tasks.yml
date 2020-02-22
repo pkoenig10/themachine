@@ -18,7 +18,7 @@ services:
     network_mode: host
     volumes:
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
-      - ../cloudflare/cloudflare.ini:/cloudflare.ini:ro
+      - ./cloudflare/cloudflare.ini:/cloudflare.ini:ro
 
   backup:
     container_name: backup
@@ -29,4 +29,4 @@ services:
     volumes:
       - $SERVER_DIR:/files
       - $SERVER_DIR/dbxcli:/root/.config/dbxcli
-      - ../backup/backup.conf:/etc/backup/backup.conf:ro
+      - ./backup/backup.conf:/etc/backup/backup.conf:ro
