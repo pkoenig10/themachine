@@ -3,11 +3,14 @@ version: '3.7'
 services:
   ddns:
     container_name: ddns
-    image: joshava/cloudflare-ddns
+    image: oznu/cloudflare-ddns
     hostname: $HOSTNAME
+    environment:
+      ZONE: $DOMAIN
+      API_KEY: $CLOUDFLARE_API_KEY
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./ddns/config.yaml:/app/config.yaml:ro
 
   nginx:
     container_name: nginx

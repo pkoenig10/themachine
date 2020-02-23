@@ -4,8 +4,5 @@
 # Cloudflare
 /cloudflare/cloudflare.ini
 
-# DDNS
-/ddns/config.yaml
-
 # Users
 /oidc/users.yml
