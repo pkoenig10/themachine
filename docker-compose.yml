@@ -104,15 +104,13 @@ services:
     hostname: pihole
     environment:
       WEBPASSWORD: $PASSWORD
-    cap_add:
-      - NET_ADMIN
     dns:
       - 127.0.0.1
       - 1.1.1.1
     restart: unless-stopped
     ports:
-      - $LOCAL_IP:53:53/tcp
-      - $LOCAL_IP:53:53/udp
+      - 53:53/tcp
+      - 53:53/udp
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/pihole/pihole:/etc/pihole
