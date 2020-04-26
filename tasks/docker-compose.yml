@@ -17,8 +17,9 @@ services:
       --must-staple
     network_mode: host
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
-      - ./cloudflare/cloudflare.ini:/cloudflare.ini:ro
+      - ../cloudflare/cloudflare.ini:/cloudflare.ini:ro
 
   backup:
     container_name: backup
@@ -27,6 +28,7 @@ services:
       NAME: $HOSTNAME
     network_mode: host
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files
       - $SERVER_DIR/dbxcli:/root/.config/dbxcli
-      - ./backup/backup.conf:/etc/backup/backup.conf:ro
+      - ../backup/backup.conf:/etc/backup/backup.conf:ro
