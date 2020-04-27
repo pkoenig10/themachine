@@ -21,6 +21,16 @@ services:
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
       - ../cloudflare/cloudflare.ini:/cloudflare.ini:ro
 
+  ddns:
+    container_name: ddns
+    image: pkoenig10/cloudflare-ddns
+    environment:
+      DOMAIN: $DOMAIN
+      API_KEY: $CLOUDFLARE_API_KEY
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
   backup:
     container_name: backup
     image: pkoenig10/dbxcli-backup
