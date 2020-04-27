@@ -205,15 +205,3 @@ services:
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower
-    command: >
-      --schedule "0 0 4 * *"
-      --cleanup
-    hostname: $HOSTNAME
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock
