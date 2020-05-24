@@ -59,6 +59,7 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - $SERVER_DIR/netdata:/var/lib/netdata
       - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
       - $DATA_DIR:/data:ro
       - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
