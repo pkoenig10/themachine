@@ -6,8 +6,7 @@ services:
     image: nginx
     command: >
       /bin/bash -c
-      "echo $USERNAME:{PLAIN}$PASSWORD > /etc/nginx/.htpasswd &&
-       envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
+      "envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        exec nginx -g 'daemon off;'"
     hostname: $HOSTNAME
     environment:
@@ -25,6 +24,7 @@ services:
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
       - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
 
   oidc:
     container_name: oidc

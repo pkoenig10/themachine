@@ -4,5 +4,8 @@
 # Cloudflare
 /cloudflare/cloudflare.ini
 
+# Nginx
+/nginx/.htpasswd
+
 # Users
 /oidc/users.yml
