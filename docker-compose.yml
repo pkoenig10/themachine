@@ -15,6 +15,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 127.0.0.1:8080:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
@@ -23,7 +24,6 @@ services:
       - ./nginx/auth-basic.conf:/etc/nginx/auth-basic.conf:ro
       - ./nginx/auth-location.conf:/etc/nginx/auth-location.conf:ro
       - ./nginx/auth-request.conf:/etc/nginx/auth-request.conf:ro
-      - ./nginx/proxy-pass.conf:/etc/nginx/proxy-pass.conf:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
 
   oidc:
@@ -43,37 +43,33 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./oidc/users.yml:/users.yml:ro
 
-  netdata:
-    container_name: netdata
-    image: netdata/netdata
+  telegraf:
+    container_name: telegraf
+    image: telegraf
     hostname: $HOSTNAME
+    network_mode: host
     environment:
-      PGID: $DOCKER_GID
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
+      HOST_ETC: /hostfs/etc
+      HOST_PROC: /hostfs/proc
+      HOST_SYS: /hostfs/sys
+      HOST_VAR: /hostfs/var
+      HOST_RUN: /hostfs/run
+      HOST_MOUNT_PREFIX: /hostfs
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
+      - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - $SERVER_DIR/netdata:/var/lib/netdata
       - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
-      - $DATA_DIR:/data:ro
-      - ./netdata/netdata.conf:/etc/netdata/netdata.conf:ro
-      - ./netdata/apps_groups.conf:/etc/netdata/apps_groups.conf:ro
-      - ./netdata/exporting.conf:/etc/netdata/exporting.conf:ro
-      - ./netdata/go.d.conf:/etc/netdata/go.d.conf:ro
-      - ./netdata/nginx.conf:/etc/netdata/go.d/nginx.conf:ro
-      - ./netdata/web_log.conf:/etc/netdata/go.d/web_log.conf:ro
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
   influxdb:
     container_name: influxdb
     image: influxdb
     hostname: $HOSTNAME
     restart: unless-stopped
+    ports:
+      - 127.0.0.1:8086:8086
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/influxdb:/var/lib/influxdb
