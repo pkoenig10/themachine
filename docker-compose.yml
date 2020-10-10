@@ -35,7 +35,7 @@ services:
       -cookie-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -cookie-max-age 672h
-      -redirect-url https://auth.$DOMAIN
+      -external-url https://auth.$DOMAIN
       -users-file /users.yml
     hostname: $HOSTNAME
     restart: unless-stopped
