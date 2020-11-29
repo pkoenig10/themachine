@@ -148,7 +148,7 @@ services:
 
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr
+    image: linuxserver/sonarr:preview
     hostname: $HOSTNAME
     environment: *environment-linuxserver
     restart: unless-stopped
