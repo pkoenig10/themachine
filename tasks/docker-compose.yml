@@ -26,7 +26,7 @@ services:
     image: pkoenig10/cloudflare-ddns
     environment:
       DOMAIN: $DOMAIN
-      API_KEY: $CLOUDFLARE_API_KEY
+      API_TOKEN: $CLOUDFLARE_API_TOKEN
     network_mode: host
     volumes:
       - /etc/localtime:/etc/localtime:ro
