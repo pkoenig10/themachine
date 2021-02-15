@@ -23,7 +23,7 @@ services:
 
   ddns:
     container_name: ddns
-    image: pkoenig10/cloudflare-ddns
+    image: pkoenig10/ddns-cloudflare
     environment:
       DOMAIN: $DOMAIN
       API_TOKEN: $CLOUDFLARE_API_TOKEN
