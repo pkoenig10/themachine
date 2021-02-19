@@ -188,8 +188,11 @@ services:
     environment:
       USERNAME: $NORDVPN_USERNAME
       PASSWORD: $NORDVPN_PASSWORD
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
     init: true
-    privileged: true
     networks:
       default:
         aliases:
