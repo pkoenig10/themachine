@@ -79,6 +79,8 @@ services:
     container_name: grafana
     image: grafana/grafana
     hostname: $HOSTNAME
+    environment:
+      GF_SERVER_ROOT_URL: https://data.$DOMAIN/
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
