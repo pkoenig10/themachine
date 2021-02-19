@@ -65,7 +65,7 @@ services:
 
   influxdb:
     container_name: influxdb
-    image: influxdb
+    image: influxdb:1.8
     hostname: $HOSTNAME
     restart: unless-stopped
     ports:
