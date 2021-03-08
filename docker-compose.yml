@@ -55,6 +55,9 @@ services:
       HOST_VAR: /hostfs/var
       HOST_RUN: /hostfs/run
       HOST_MOUNT_PREFIX: /hostfs
+      INFLUX_TOKEN: $INFLUX_TOKEN
+      INFLUX_ORGANIZATION: $INFLUX_ORGANIZATION
+      INFLUX_BUCKET: $INFLUX_BUCKET
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -75,12 +78,24 @@ services:
       - $SERVER_DIR/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
+  influxdb2:
+    container_name: influxdb2
+    image: influxdb
+    hostname: $HOSTNAME
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8087:8086
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/influxdb2:/var/lib/influxdb2
+
   grafana:
     container_name: grafana
     image: grafana/grafana
     hostname: $HOSTNAME
     environment:
       GF_SERVER_ROOT_URL: https://data.$DOMAIN/
+      INFLUX_TOKEN: $INFLUX_TOKEN
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro

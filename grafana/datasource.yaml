@@ -4,8 +4,11 @@ datasources:
   - name: Telegraf
     type: influxdb
     access: proxy
-    url: http://influxdb:8086
+    url: http://influxdb2:8086
     database: telegraf
     isDefault: true
     jsonData:
+      httpHeaderName1: Authorization
       timeInterval: 10s
+    secureJsonData:
+      httpHeaderValue1: Token $INFLUX_TOKEN
