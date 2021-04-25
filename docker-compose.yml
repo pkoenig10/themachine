@@ -43,6 +43,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./oidc/users.yml:/users.yml:ro
 
+  homer:
+    container_name: homer
+    image: b4bz/homer
+    hostname: $HOSTNAME
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./homer/config.yml:/www/assets/config.yml:ro
+
   telegraf:
     container_name: telegraf
     image: telegraf

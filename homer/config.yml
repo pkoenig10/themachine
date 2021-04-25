@@ -1,0 +1,54 @@
+documentTitle: "The Machine"
+title: "The Machine"
+subtitle: "Dashboard"
+icon: "fas fa-server"
+
+header: true
+footer: false
+
+links:
+  - name: "Github"
+    icon: "fab fa-github"
+    url: "https://raw.githubusercontent.com/pkoenig10/themachine"
+
+services:
+  - name: "Media"
+    icon: "fas fa-play-circle"
+    items:
+      - name: "Plex"
+        subtitle: "Watch Movies & TV"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Plex/plex.png"
+        url: "https://app.plex.tv/desktop"
+  - name: "Downloads"
+    icon: "fas fa-cloud-download-alt"
+    items:
+      - name: "Radarr"
+        subtitle: "Download Movies"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Radarr/radarr.png"
+        url: "https://movies.themachine.app"
+      - name: "Sonarr"
+        subtitle: "Download TV"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Sonarr/sonarr.png"
+        url: "https://tv.themachine.app"
+      - name: "Jackett"
+        subtitle: "Search for downloads"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Jackett/jackett.png"
+        url: "https://search.themachine.app"
+      - name: "Transmission"
+        subtitle: "Manage downloads"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Transmission/transmission.png"
+        url: "https://downloads.themachine.app"
+  - name: "Stats"
+    icon: "fas fa-chart-area"
+    items:
+      - name: "Tautulli"
+        subtitle: "Watch statistics"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Tautulli/tautulli.png"
+        url: "https://stats.themachine.app"
+  - name: "Monitoring"
+    icon: "fas fa-bell"
+    items:
+      - name: "Grafana"
+        subtitle: "Metrics dashboard"
+        logo: "https://raw.githubusercontent.com/linuxserver/Heimdall-Apps/bd72a7a3ad8915ffa89c3dacb99a4e61c9715a7c/Grafana/grafana.png"
+        url: "https://data.themachine.app"
