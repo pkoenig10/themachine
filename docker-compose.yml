@@ -8,14 +8,13 @@ services:
       /bin/bash -c
       "envsubst '$$DOMAIN' < etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf &&
        exec nginx -g 'daemon off;'"
-    hostname: $HOSTNAME
     environment:
       DOMAIN: $DOMAIN
-    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
       - 127.0.0.1:8080:8080
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
@@ -37,7 +36,6 @@ services:
       -cookie-max-age 672h
       -external-url https://auth.$DOMAIN
       -users-file /users.yml
-    hostname: $HOSTNAME
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -46,8 +44,6 @@ services:
   telegraf:
     container_name: telegraf
     image: telegraf
-    hostname: $HOSTNAME
-    network_mode: host
     environment:
       HOST_ETC: /hostfs/etc
       HOST_PROC: /hostfs/proc
@@ -55,6 +51,7 @@ services:
       HOST_VAR: /hostfs/var
       HOST_RUN: /hostfs/run
       HOST_MOUNT_PREFIX: /hostfs
+    network_mode: host
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -66,10 +63,9 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb:1.8
-    hostname: $HOSTNAME
-    restart: unless-stopped
     ports:
       - 127.0.0.1:8086:8086
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/influxdb:/var/lib/influxdb
@@ -78,7 +74,6 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana
-    hostname: $HOSTNAME
     environment:
       GF_SERVER_ROOT_URL: https://data.$DOMAIN/
     restart: unless-stopped
@@ -93,39 +88,36 @@ services:
     image: networkstatic/iperf3
     command: >
       -s
-    hostname: $HOSTNAME
-    restart: unless-stopped
     ports:
       - 5201:5201
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
   plex:
     container_name: plex
     image: plexinc/pms-docker:beta
-    hostname: $HOSTNAME
+    devices:
+      - /dev/dri
     environment:
       PLEX_UID: $UID
       PLEX_GID: $GID
       ADVERTISE_IP: http://$LOCAL_IP:32400
       ALLOWED_NETWORKS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-    devices:
-      - /dev/dri
-    restart: unless-stopped
     ports:
       - 32400:32400
+    restart: unless-stopped
+    tmpfs:
+      - /transcode
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
-    tmpfs:
-      - /transcode
 
   tautulli:
     container_name: tautulli
     image: tautulli/tautulli
-    hostname: $HOSTNAME
     environment:
       PUID: $UID
       PGID: $GID
@@ -137,7 +129,6 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    hostname: $HOSTNAME
     environment: &environment-linuxserver
       PUID: $UID
       PGID: $GID
@@ -150,8 +141,7 @@ services:
 
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr:preview
-    hostname: $HOSTNAME
+    image: linuxserver/sonarr
     environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
@@ -163,7 +153,6 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    hostname: $HOSTNAME
     environment: *environment-linuxserver
     restart: unless-stopped
     volumes:
@@ -173,7 +162,8 @@ services:
   transmission:
     container_name: transmission
     image: haugene/transmission-openvpn
-    hostname: $HOSTNAME
+    cap_add:
+      - NET_ADMIN
     environment:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
@@ -185,8 +175,6 @@ services:
       TRANSMISSION_WATCH_DIR_ENABLED: "false"
       TRANSMISSION_HOME: /transmission
       TRANSMISSION_WEB_HOME: /web
-    cap_add:
-      - NET_ADMIN
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
