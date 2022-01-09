@@ -15,7 +15,6 @@ services:
       --agree-tos
       --keep-until-expiring
       --must-staple
-    network_mode: host
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt
@@ -34,9 +33,6 @@ services:
   backup:
     container_name: backup
     image: pkoenig10/dbxcli-backup
-    environment:
-      NAME: $HOSTNAME
-    network_mode: host
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files
