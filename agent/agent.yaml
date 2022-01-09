@@ -1,0 +1,69 @@
+server:
+  http_listen_address: 127.0.0.1
+  http_listen_port: 12345
+
+metrics:
+  global:
+    scrape_interval: 15s
+    remote_write:
+      - url: ${GRAFANA_URL}
+        basic_auth:
+          username: ${GRAFANA_USERNAME}
+          password: ${GRAFANA_PASSWORD}
+        write_relabel_configs:
+          - action: drop
+            source_labels:
+              - __name__
+            regex: go_.*
+          - action: labeldrop
+            regex: agent_hostname|instance
+
+integrations:
+  agent:
+    enabled: true
+    metric_relabel_configs:
+      - action: labeldrop
+        regex: consumer|instance_group_name|remote_name
+  cadvisor:
+    enabled: true
+    metric_relabel_configs:
+      - action: labeldrop
+        regex: boot_id|id|image|machine_id|system_uuid
+      - action: keep
+        source_labels:
+          - name
+        regex: agent|iperf|jackett|nginx|oidc|plex|radarr|sonarr|tautulli|transmission
+    enabled_metrics:
+      - cpu
+      - percpu
+      - cpu_topology
+      - disk
+      - diskIO
+      - memory
+      - network
+      - process
+    store_container_labels: false
+  node_exporter:
+    enabled: true
+    rootfs_path: /rootfs
+    procfs_path: /rootfs/proc
+    sysfs_path: /rootfs/sys
+    diskstats_ignored_devices: ^(loop\d|nvme\dn\dp\d|sd\w\d)$
+    filesystem_ignored_mount_points: ^/(boot|dev|proc|run|sys|var).*$
+    netclass_ignored_devices: ^(br|docker|lo|veth|wl).*$
+    netdev_device_blacklist: ^(br|docker|lo|veth|wl).*$
+    set_collectors:
+      - cpu
+      - cpufreq
+      - diskstats
+      - filesystem
+      - hwmon
+      - loadavg
+      - meminfo
+      - netdev
+      - pressure
+      - processes
+      - rapl
+      - stat
+      - thermal_zone
+      - vmstat

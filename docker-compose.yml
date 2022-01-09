@@ -10,7 +10,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 127.0.0.1:8080:8080
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -34,47 +33,26 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./oidc/users.yml:/users.yml:ro
 
-  telegraf:
-    container_name: telegraf
-    image: telegraf
+  agent:
+    container_name: agent
+    image: grafana/agent
+    command: >
+      -config.expand-env
+      -config.file=/etc/agent/agent.yaml
+      -metrics.wal-directory=/etc/agent/data
     environment:
-      HOST_ETC: /hostfs/etc
-      HOST_PROC: /hostfs/proc
-      HOST_SYS: /hostfs/sys
-      HOST_VAR: /hostfs/var
-      HOST_RUN: /hostfs/run
-      HOST_MOUNT_PREFIX: /hostfs
+      GRAFANA_URL: $GRAFANA_URL
+      GRAFANA_USERNAME: $GRAFANA_USERNAME
+      GRAFANA_PASSWORD: $GRAFANA_PASSWORD
     network_mode: host
+    pid: host
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - $SERVER_DIR/nginx/logs:/var/log/nginx:ro
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-
-  influxdb:
-    container_name: influxdb
-    image: influxdb:1.8
-    ports:
-      - 127.0.0.1:8086:8086
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/influxdb:/var/lib/influxdb
-      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana
-    environment:
-      GF_SERVER_ROOT_URL: https://data.$DOMAIN/
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/grafana:/var/lib/grafana
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./agent/agent.yaml:/etc/agent/agent.yaml:ro
 
   iperf:
     container_name: iperf
