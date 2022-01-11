@@ -49,9 +49,9 @@ integrations:
     procfs_path: /rootfs/proc
     sysfs_path: /rootfs/sys
     diskstats_ignored_devices: ^(loop\d|nvme\dn\dp\d|sd\w\d)$
-    filesystem_ignored_mount_points: ^/(boot|dev|proc|run|sys|var).*$
+    filesystem_mount_points_exclude: ^/(boot|dev|proc|run|sys|var).*$
     netclass_ignored_devices: ^(br|docker|lo|veth|wl).*$
-    netdev_device_blacklist: ^(br|docker|lo|veth|wl).*$
+    netdev_device_exclude: ^(br|docker|lo|veth|wl).*$
     set_collectors:
       - cpu
       - cpufreq
