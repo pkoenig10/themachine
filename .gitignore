@@ -1,11 +1,11 @@
 # Environment variables
 /.env
 
-# Cloudflare
-/cloudflare/cloudflare.ini
+# Certbot
+/certbot/cloudflare.ini
 
 # Nginx
 /nginx/.htpasswd
 
-# Users
+# OpenID Connect
 /oidc/users.yml

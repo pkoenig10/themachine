@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   nginx:
@@ -17,6 +17,39 @@ services:
       - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+
+  certbot:
+    container_name: certbot
+    image: certbot/dns-cloudflare
+    command: >
+      certonly
+      --email $EMAIL
+      --cert-name $DOMAIN
+      --domains $DOMAIN
+      --domains *.$DOMAIN
+      --dns-cloudflare
+      --dns-cloudflare-credentials /cloudflare.ini
+      --agree-tos
+      --keep-until-expiring
+      --must-staple
+    profiles:
+      - task
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/letsencrypt:/etc/letsencrypt
+      - ./certbot/cloudflare.ini:/cloudflare.ini:ro
+
+  ddns:
+    container_name: ddns
+    image: pkoenig10/ddns-cloudflare
+    environment:
+      DOMAIN: $DOMAIN
+      API_TOKEN: $CLOUDFLARE_API_TOKEN
+    network_mode: host
+    profiles:
+      - task
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
   oidc:
     container_name: oidc
@@ -152,3 +185,14 @@ services:
       - $SERVER_DIR/transmission:/transmission
       - $DATA_DIR/downloads:/downloads
       - $TRANSMISSION_WEB_DIR:/web:ro
+
+  backup:
+    container_name: backup
+    image: pkoenig10/dbxcli-backup
+    profiles:
+      - task
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR:/files
+      - $SERVER_DIR/dbxcli:/root/.config/dbxcli
+      - ./backup/backup.conf:/etc/backup/backup.conf:ro
