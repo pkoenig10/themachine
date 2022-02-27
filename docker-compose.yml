@@ -189,6 +189,8 @@ services:
   backup:
     container_name: backup
     image: pkoenig10/dbxcli-backup
+    environment:
+      NAME: $HOSTNAME
     profiles:
       - task
     volumes:
