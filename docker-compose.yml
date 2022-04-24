@@ -55,16 +55,16 @@ services:
     container_name: oidc
     image: pkoenig10/oidc-rp
     command: >
+      -external-url https://auth.$DOMAIN
       -client-id $CLIENT_ID
       -client-secret $CLIENT_SECRET
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
-      -external-url https://auth.$DOMAIN
-      -users-file /users.yml
+      -config-file /config.yml
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./oidc/users.yml:/users.yml:ro
+      - ./oidc/config.yml:/config.yml:ro
 
   agent:
     container_name: agent
