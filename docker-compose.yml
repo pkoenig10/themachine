@@ -188,13 +188,15 @@ services:
 
   backup:
     container_name: backup
-    image: pkoenig10/dbxcli-backup
-    environment:
-      NAME: $HOSTNAME
+    image: pkoenig10/backup-google
+    command: >
+      -bucket-name $BUCKET_NAME
+      -config-file /config.yml
+      -credentials-file /credentials.json
     profiles:
       - task
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files
-      - $SERVER_DIR/dbxcli:/root/.config/dbxcli
-      - ./backup/backup.conf:/etc/backup/backup.conf:ro
+      - ./backup/config.yml:/config.yml:ro
+      - ./backup/credentials.json:/credentials.json:ro
