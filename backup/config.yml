@@ -3,4 +3,4 @@ files:
   - radarr/config/Backups/**
   - sonarr/config/Backups/**
   - tautulli/config/backups/**
-  - transmission/settings.json
+  - transmission/config/transmission-home/settings.json
