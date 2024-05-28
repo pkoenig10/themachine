@@ -11,4 +11,4 @@
 /nginx/.htpasswd
 
 # OpenID Connect
-/oidc/config.yml
+/auth/config.yml

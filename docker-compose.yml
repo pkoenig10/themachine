@@ -49,9 +49,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-  oidc:
-    container_name: oidc
-    image: pkoenig10/oidc-rp
+  auth:
+    container_name: auth
+    image: pkoenig10/auth-oidc
     command: >
       -external-url https://auth.$DOMAIN
       -client-id $CLIENT_ID
@@ -62,7 +62,7 @@ services:
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./oidc/config.yml:/config.yml:ro
+      - ./auth/config.yml:/config.yml:ro
 
   telegraf:
     container_name: telegraf
