@@ -1,20 +1,33 @@
 services:
-  nginx:
-    container_name: nginx
-    image: nginx
-    environment:
-      DOMAIN: $DOMAIN
-      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
-    ports:
-      - 80:80
-      - 443:443
+  auth:
+    container_name: auth
+    image: pkoenig10/auth-oidc
+    command: >
+      -external-url https://auth.$DOMAIN
+      -client-id $CLIENT_ID
+      -client-secret $CLIENT_SECRET
+      -token-key $COOKIE_KEY
+      -cookie-domain $DOMAIN
+      -config-file /config.yml
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
-      - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./auth/config.yml:/config.yml:ro
+
+  backup:
+    container_name: backup
+    image: pkoenig10/backup-google
+    command: >
+      -bucket-name $BUCKET_NAME
+      -config-file /config.yml
+      -credentials-file /credentials.json
+    profiles:
+      - task
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR:/files
+      - ./backup/config.yml:/config.yml:ro
+      - ./backup/credentials.json:/credentials.json:ro
 
   certbot:
     container_name: certbot
@@ -49,42 +62,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-  auth:
-    container_name: auth
-    image: pkoenig10/auth-oidc
-    command: >
-      -external-url https://auth.$DOMAIN
-      -client-id $CLIENT_ID
-      -client-secret $CLIENT_SECRET
-      -token-key $COOKIE_KEY
-      -cookie-domain $DOMAIN
-      -config-file /config.yml
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./auth/config.yml:/config.yml:ro
-
-  telegraf:
-    container_name: telegraf
-    image: telegraf
-    environment:
-      GRAFANA_URL: $GRAFANA_URL
-      GRAFANA_USERNAME: $GRAFANA_USERNAME
-      GRAFANA_PASSWORD: $GRAFANA_PASSWORD
-      HOST_ETC: /hostfs/etc
-      HOST_PROC: /hostfs/proc
-      HOST_RUN: /hostfs/run
-      HOST_SYS: /hostfs/sys
-      HOST_VAR: /hostfs/var
-      HOST_MOUNT_PREFIX: /hostfs
-    network_mode: host
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-
   iperf:
     container_name: iperf
     image: networkstatic/iperf3
@@ -95,6 +72,34 @@ services:
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
+
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett
+    environment:
+      PUID: $UID
+      PGID: $GID
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/jackett/config:/config
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    environment:
+      DOMAIN: $DOMAIN
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
+      - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
 
   plex:
     container_name: plex
@@ -117,21 +122,10 @@ services:
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
 
-  tautulli:
-    container_name: tautulli
-    image: tautulli/tautulli
-    environment:
-      PUID: $UID
-      PGID: $GID
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/tautulli/config:/config
-
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    environment: &environment-linuxserver
+    environment:
       PUID: $UID
       PGID: $GID
     restart: unless-stopped
@@ -144,7 +138,9 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    environment: *environment-linuxserver
+    environment:
+      PUID: $UID
+      PGID: $GID
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -152,14 +148,37 @@ services:
       - $DATA_DIR/downloads:/data
       - $DATA_DIR/tv:/tv
 
-  jackett:
-    container_name: jackett
-    image: linuxserver/jackett
-    environment: *environment-linuxserver
+  tautulli:
+    container_name: tautulli
+    image: tautulli/tautulli
+    environment:
+      PUID: $UID
+      PGID: $GID
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/jackett/config:/config
+      - $SERVER_DIR/tautulli/config:/config
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    environment:
+      GRAFANA_URL: $GRAFANA_URL
+      GRAFANA_USERNAME: $GRAFANA_USERNAME
+      GRAFANA_PASSWORD: $GRAFANA_PASSWORD
+      HOST_ETC: /hostfs/etc
+      HOST_PROC: /hostfs/proc
+      HOST_RUN: /hostfs/run
+      HOST_SYS: /hostfs/sys
+      HOST_VAR: /hostfs/var
+      HOST_MOUNT_PREFIX: /hostfs
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
   transmission:
     container_name: transmission
@@ -177,18 +196,3 @@ services:
       - $SERVER_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/data
       - $TRANSMISSION_WEB_DIR:/web:ro
-
-  backup:
-    container_name: backup
-    image: pkoenig10/backup-google
-    command: >
-      -bucket-name $BUCKET_NAME
-      -config-file /config.yml
-      -credentials-file /credentials.json
-    profiles:
-      - task
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR:/files
-      - ./backup/config.yml:/config.yml:ro
-      - ./backup/credentials.json:/credentials.json:ro
