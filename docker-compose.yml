@@ -1,41 +1,22 @@
 services:
-  nginx:
-    container_name: nginx
-    image: nginx
+  caddy:
+    container_name: caddy
+    build: ./caddy
     environment:
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
       DOMAIN: $DOMAIN
-      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+      EMAIL: $EMAIL
+      USERNAME: $USERNAME
+      PASSWORD: $PASSWORD
     ports:
       - 80:80
       - 443:443
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
-      - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
-
-  certbot:
-    container_name: certbot
-    image: certbot/dns-cloudflare
-    command: >
-      certonly
-      --email $EMAIL
-      --cert-name $DOMAIN
-      --domains $DOMAIN
-      --domains *.$DOMAIN
-      --dns-cloudflare
-      --dns-cloudflare-credentials /cloudflare.ini
-      --agree-tos
-      --keep-until-expiring
-      --must-staple
-    profiles:
-      - task
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/letsencrypt:/etc/letsencrypt
-      - ./certbot/cloudflare.ini:/cloudflare.ini:ro
+      - $SERVER_DIR/caddy/data:/data
+      - $SERVER_DIR/caddy/config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
   ddns:
     container_name: ddns
