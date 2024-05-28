@@ -1,4 +1,12 @@
 {
+	dynamic_dns {
+		provider cloudflare {env.CLOUDFLARE_API_TOKEN}
+		domains {
+			{$DOMAIN}
+		}
+		check_interval 5m
+	}
+
 	log {
 		format console {
 			time_local
@@ -7,7 +15,7 @@
 }
 
 (auth) {
-	reverse_proxy oidc:80 {
+	reverse_proxy :81 {
 		method GET
 		rewrite /auth?group={args.0}&redirect={scheme}://{hostport}{uri}
 
@@ -32,7 +40,7 @@
 		host auth.{$DOMAIN}
 	}
 	handle @auth {
-		reverse_proxy oidc:80
+		reverse_proxy :81
 	}
 
 	@downloads {
@@ -40,7 +48,7 @@
 	}
 	handle @downloads {
 		import auth users
-		reverse_proxy transmission:9091
+		reverse_proxy :9091
 	}
 
 	@movies {
@@ -48,7 +56,7 @@
 	}
 	handle @movies {
 		import auth users
-		reverse_proxy radarr:7878
+		reverse_proxy :7878
 	}
 
 	@plex {
@@ -56,7 +64,7 @@
 	}
 	handle @plex {
 		import auth users
-		reverse_proxy plex:32400
+		reverse_proxy :32400
 	}
 
 	@search {
@@ -64,7 +72,7 @@
 	}
 	handle @search {
 		import auth users
-		reverse_proxy jackett:9117
+		reverse_proxy :9117
 	}
 
 	@stats {
@@ -72,7 +80,7 @@
 	}
 	handle @stats {
 		import auth admins
-		reverse_proxy tautulli:8181
+		reverse_proxy :8181
 	}
 
 	@tv {
@@ -80,7 +88,7 @@
 	}
 	handle @tv {
 		import auth users
-		reverse_proxy sonarr:8989
+		reverse_proxy :8989
 	}
 
 	@radarr {
@@ -88,7 +96,7 @@
 		path /api/*
 	}
 	handle @radarr {
-		reverse_proxy radarr:7878
+		reverse_proxy :7878
 	}
 
 	@sonarr {
@@ -96,7 +104,7 @@
 		path /api/*
 	}
 	handle @sonarr {
-		reverse_proxy sonarr:8989
+		reverse_proxy :8989
 	}
 
 	@transmission {
@@ -105,7 +113,7 @@
 	}
 	handle @transmission {
 		import basicauth
-		reverse_proxy transmission:9091
+		reverse_proxy :9091
 	}
 
 	abort

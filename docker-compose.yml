@@ -8,27 +8,13 @@ services:
       EMAIL: $EMAIL
       USERNAME: $USERNAME
       PASSWORD: $PASSWORD
-    ports:
-      - 80:80
-      - 443:443
+    network_mode: host
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/caddy/data:/data
       - $SERVER_DIR/caddy/config:/config
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-
-  ddns:
-    container_name: ddns
-    image: pkoenig10/ddns-cloudflare
-    environment:
-      DOMAIN: $DOMAIN
-      API_TOKEN: $CLOUDFLARE_API_TOKEN
-    network_mode: host
-    profiles:
-      - task
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
 
   oidc:
     container_name: oidc
@@ -40,6 +26,8 @@ services:
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -config-file /config.yml
+    ports:
+      - 127.0.0.1:81:80
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -104,6 +92,8 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
+    ports:
+      - 127.0.0.1:8181:8181
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -115,6 +105,8 @@ services:
     environment: &environment-linuxserver
       PUID: $UID
       PGID: $GID
+    ports:
+      - 127.0.0.1:7878:7878
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -126,6 +118,8 @@ services:
     container_name: sonarr
     image: linuxserver/sonarr
     environment: *environment-linuxserver
+    ports:
+      - 127.0.0.1:8989:8989
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -137,6 +131,8 @@ services:
     container_name: jackett
     image: linuxserver/jackett
     environment: *environment-linuxserver
+    ports:
+      - 127.0.0.1:9117:9117
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -152,6 +148,8 @@ services:
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
       TRANSMISSION_WEB_HOME: /web
+    ports:
+      - 127.0.0.1:9091:9091
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
