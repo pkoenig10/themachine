@@ -29,26 +29,24 @@ services:
       - ./backup/config.yml:/config.yml:ro
       - ./backup/credentials.json:/credentials.json:ro
 
-  certbot:
-    container_name: certbot
-    image: certbot/dns-cloudflare
-    command: >
-      certonly
-      --email $EMAIL
-      --cert-name $DOMAIN
-      --domains $DOMAIN
-      --domains *.$DOMAIN
-      --dns-cloudflare
-      --dns-cloudflare-credentials /cloudflare.ini
-      --agree-tos
-      --keep-until-expiring
-      --must-staple
-    profiles:
-      - task
+  caddy:
+    container_name: caddy
+    build: ./caddy
+    environment:
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+      DOMAIN: $DOMAIN
+      EMAIL: $EMAIL
+      USERNAME: $USERNAME
+      PASSWORD: $PASSWORD
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/letsencrypt:/etc/letsencrypt
-      - ./certbot/cloudflare.ini:/cloudflare.ini:ro
+      - $SERVER_DIR/caddy/data:/data
+      - $SERVER_DIR/caddy/config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
   ddns:
     container_name: ddns
@@ -83,23 +81,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/jackett/config:/config
-
-  nginx:
-    container_name: nginx
-    image: nginx
-    environment:
-      DOMAIN: $DOMAIN
-      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
-    ports:
-      - 80:80
-      - 443:443
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/nginx/logs:/var/log/nginx/logs
-      - $SERVER_DIR/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
 
   plex:
     container_name: plex

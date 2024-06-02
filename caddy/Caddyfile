@@ -1,0 +1,112 @@
+{
+	log {
+		format console {
+			time_local
+		}
+	}
+}
+
+(auth) {
+	reverse_proxy auth:80 {
+		method GET
+		rewrite /auth?group={args[0]}&redirect={scheme}://{hostport}{uri}
+
+		@200 status 200
+		handle_response @200 {
+		}
+	}
+}
+
+(basicauth) {
+	basicauth {
+		{$USERNAME} {$PASSWORD}
+	}
+}
+
+*.{$DOMAIN} {
+	tls {$EMAIL} {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+
+	@auth {
+		host auth.{$DOMAIN}
+	}
+	handle @auth {
+		reverse_proxy auth:80
+	}
+
+	@downloads {
+		host downloads.{$DOMAIN}
+	}
+	handle @downloads {
+		import auth users
+		reverse_proxy transmission:9091
+	}
+
+	@movies {
+		host movies.{$DOMAIN}
+	}
+	handle @movies {
+		import auth users
+		reverse_proxy radarr:7878
+	}
+
+	@plex {
+		host plex.{$DOMAIN}
+	}
+	handle @plex {
+		import auth users
+		reverse_proxy plex:32400
+	}
+
+	@radarr {
+		host radarr.{$DOMAIN}
+		path /api/*
+	}
+	handle @radarr {
+		reverse_proxy radarr:7878
+	}
+
+	@search {
+		host search.{$DOMAIN}
+	}
+	handle @search {
+		import auth users
+		reverse_proxy jackett:9117
+	}
+
+	@sonarr {
+		host sonarr.{$DOMAIN}
+		path /api/*
+	}
+	handle @sonarr {
+		reverse_proxy sonarr:8989
+	}
+
+	@stats {
+		host stats.{$DOMAIN}
+	}
+	handle @stats {
+		import auth admins
+		reverse_proxy tautulli:8181
+	}
+
+	@transmission {
+		host transmission.{$DOMAIN}
+		path /transmission/rpc
+	}
+	handle @transmission {
+		import basicauth
+		reverse_proxy transmission:9091
+	}
+
+	@tv {
+		host tv.{$DOMAIN}
+	}
+	handle @tv {
+		import auth users
+		reverse_proxy sonarr:8989
+	}
+
+	abort
+}

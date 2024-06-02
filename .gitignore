@@ -4,11 +4,5 @@
 # Backup
 /backup/credentials.json
 
-# Certbot
-/certbot/cloudflare.ini
-
-# Nginx
-/nginx/.htpasswd
-
 # OpenID Connect
 /auth/config.yml
