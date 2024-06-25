@@ -91,6 +91,14 @@
 		reverse_proxy tautulli:8181
 	}
 
+	@tautulli {
+		host tautulli.{$DOMAIN}
+		path /api/*
+	}
+	handle @tautulli {
+		reverse_proxy tautulli:8181
+	}
+
 	@transmission {
 		host transmission.{$DOMAIN}
 		path /transmission/rpc
