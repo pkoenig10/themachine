@@ -1,8 +1,8 @@
 # Environment variables
 /.env
 
-# Backup
-/backup/credentials.json
-
 # OpenID Connect
 /auth/config.yml
+
+# Backup
+/backup/credentials.json

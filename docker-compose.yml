@@ -25,7 +25,8 @@ services:
       - task
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR:/files
+      - $SERVER_DIR:/files/server:ro
+      - .:/files/project:ro
       - ./backup/config.yml:/config.yml:ro
       - ./backup/credentials.json:/credentials.json:ro
 

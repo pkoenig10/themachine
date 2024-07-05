@@ -1,6 +1,9 @@
 files:
-  - plex/config/Library/Application Support/Plex Media Server/Preferences.xml
-  - radarr/config/Backups/**
-  - sonarr/config/Backups/**
-  - tautulli/config/backups/**
-  - transmission/config/transmission-home/settings.json
+  - project/.env
+  - project/auth/config.yml
+  - project/backup/credentials.json
+  - server/plex/config/Library/Application Support/Plex Media Server/Preferences.xml
+  - server/radarr/config/Backups/**
+  - server/sonarr/config/Backups/**
+  - server/tautulli/config/backups/**
+  - server/transmission/config/transmission-home/settings.json
