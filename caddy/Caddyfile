@@ -17,8 +17,8 @@
 	}
 }
 
-(basicauth) {
-	basicauth {
+(basic_auth) {
+	basic_auth {
 		{$USERNAME} {$PASSWORD}
 	}
 }
@@ -104,7 +104,7 @@
 		path /transmission/rpc
 	}
 	handle @transmission {
-		import basicauth
+		import basic_auth
 		reverse_proxy transmission:9091
 	}
 
