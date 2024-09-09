@@ -91,8 +91,7 @@ services:
     environment:
       PLEX_UID: $UID
       PLEX_GID: $GID
-      ADVERTISE_IP: http://$LOCAL_IP:32400
-      ALLOWED_NETWORKS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      ADVERTISE_IP: https://$LOCAL_IP:32400,https://plex.$DOMAIN:443
     ports:
       - 32400:32400
     restart: unless-stopped
@@ -178,3 +177,7 @@ services:
       - $SERVER_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/data
       - $TRANSMISSION_WEB_DIR:/web:ro
+
+networks:
+  default:
+    enable_ipv6: true

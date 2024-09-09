@@ -55,7 +55,6 @@
 		host plex.{$DOMAIN}
 	}
 	handle @plex {
-		import auth users
 		reverse_proxy plex:32400
 	}
 
