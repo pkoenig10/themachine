@@ -9,7 +9,7 @@ services:
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -config-file /config.yml
-    restart: unless-stopped
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./auth/config.yml:/config.yml:ro
@@ -23,6 +23,7 @@ services:
       -credentials-file /credentials.json
     profiles:
       - task
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files/server:ro
@@ -43,7 +44,7 @@ services:
       - 80:80
       - 443:443
       - 443:443/udp
-    restart: unless-stopped
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/caddy/data:/data
@@ -59,6 +60,7 @@ services:
     network_mode: host
     profiles:
       - task
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -69,7 +71,6 @@ services:
       -s
     ports:
       - 5201:5201
-    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -79,24 +80,26 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
-    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/jackett/config:/config
 
   plex:
     container_name: plex
-    image: plexinc/pms-docker:beta
+    image: linuxserver/plex
     devices:
       - /dev/dri
     environment:
-      PLEX_UID: $UID
-      PLEX_GID: $GID
-      ADVERTISE_IP: https://$LOCAL_IP:32400,https://plex.$DOMAIN:443
+      PUID: $UID
+      PGID: $GID
     ports:
       - 32400:32400
-    restart: unless-stopped
+    read_only: true
     tmpfs:
+      - /run:exec
       - /transcode
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -110,7 +113,9 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
-    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/radarr/config:/config
@@ -123,7 +128,9 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
-    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/sonarr/config:/config
@@ -132,11 +139,13 @@ services:
 
   tautulli:
     container_name: tautulli
-    image: tautulli/tautulli
+    image: linuxserver/tautulli
     environment:
       PUID: $UID
       PGID: $GID
-    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/tautulli/config:/config
@@ -155,7 +164,7 @@ services:
       HOST_VAR: /hostfs/var
       HOST_MOUNT_PREFIX: /hostfs
     network_mode: host
-    restart: unless-stopped
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /:/hostfs:ro
@@ -172,7 +181,6 @@ services:
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
       TRANSMISSION_WEB_HOME: /web
-    restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission/config:/config
