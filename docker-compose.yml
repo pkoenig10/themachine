@@ -167,6 +167,8 @@ services:
     image: haugene/transmission-openvpn
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun
     environment:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
