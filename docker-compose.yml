@@ -10,6 +10,7 @@ services:
       -cookie-domain $DOMAIN
       -config-file /config.yml
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./auth/config.yml:/config.yml:ro
@@ -23,6 +24,7 @@ services:
       -credentials-file /credentials.json
     profiles:
       - task
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files/server:ro
@@ -44,6 +46,7 @@ services:
       - 443:443
       - 443:443/udp
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/caddy/data:/data
@@ -59,6 +62,7 @@ services:
     network_mode: host
     profiles:
       - task
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -70,16 +74,15 @@ services:
     ports:
       - 5201:5201
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/jackett/config:/config
@@ -89,14 +92,12 @@ services:
     image: linuxserver/plex
     devices:
       - /dev/dri
-    environment:
-      PUID: $UID
-      PGID: $GID
     ports:
       - 32400:32400
     restart: unless-stopped
     tmpfs:
       - /transcode
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/plex/config:/config
@@ -106,10 +107,8 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/radarr/config:/config
@@ -119,10 +118,8 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/sonarr/config:/config
@@ -132,10 +129,8 @@ services:
   tautulli:
     container_name: tautulli
     image: linuxserver/tautulli
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/tautulli/config:/config
@@ -155,6 +150,7 @@ services:
       HOST_MOUNT_PREFIX: /hostfs
     network_mode: host
     restart: unless-stopped
+    user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /:/hostfs:ro
@@ -169,11 +165,13 @@ services:
     devices:
       - /dev/net/tun
     environment:
+      CREATE_TUN_DEVICE: false
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
       TRANSMISSION_WEB_HOME: /web
     restart: unless-stopped
+    # user: $USER_ID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission/config:/config
