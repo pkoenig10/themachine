@@ -9,6 +9,7 @@ services:
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -config-file /config.yml
+    read_only: true
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -23,6 +24,7 @@ services:
       -credentials-file /credentials.json
     profiles:
       - task
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files/server:ro
@@ -43,6 +45,7 @@ services:
       - 80:80
       - 443:443
       - 443:443/udp
+    read_only: true
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -59,6 +62,7 @@ services:
     network_mode: host
     profiles:
       - task
+    read_only: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -79,7 +83,10 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
+    read_only: true
     restart: unless-stopped
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/jackett/config:/config
@@ -94,8 +101,10 @@ services:
       PGID: $GID
     ports:
       - 32400:32400
+    read_only: true
     restart: unless-stopped
     tmpfs:
+      - /run:exec
       - /transcode
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -109,7 +118,10 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
+    read_only: true
     restart: unless-stopped
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/radarr/config:/config
@@ -122,7 +134,10 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
+    read_only: true
     restart: unless-stopped
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/sonarr/config:/config
@@ -135,7 +150,10 @@ services:
     environment:
       PUID: $UID
       PGID: $GID
+    read_only: true
     restart: unless-stopped
+    tmpfs:
+      - /run:exec
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/tautulli/config:/config
@@ -154,6 +172,7 @@ services:
       HOST_VAR: /hostfs/var
       HOST_MOUNT_PREFIX: /hostfs
     network_mode: host
+    read_only: true
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
