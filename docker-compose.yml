@@ -1,4 +1,12 @@
 services:
+  wled:
+    image: ghcr.io/zackelia/wled-matter-bridge
+    container_name: wled-matter-bridge
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - $SERVER_DIR/wled/chip:/var/chip
+
   auth:
     container_name: auth
     image: pkoenig10/auth-oidc
