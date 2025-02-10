@@ -75,13 +75,12 @@ services:
 
   plex:
     container_name: plex
-    image: plexinc/pms-docker:beta
+    image: linuxserver/plex
     devices:
       - /dev/dri
     environment:
-      PLEX_UID: $UID
-      PLEX_GID: $GID
-      ADVERTISE_IP: https://$LOCAL_IP:32400,https://plex.$DOMAIN:443
+      PUID: $UID
+      PGID: $GID
     ports:
       - 32400:32400
     restart: unless-stopped
@@ -121,7 +120,7 @@ services:
 
   tautulli:
     container_name: tautulli
-    image: tautulli/tautulli
+    image: linuxserver/tautulli
     environment:
       PUID: $UID
       PGID: $GID
