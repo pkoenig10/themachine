@@ -62,17 +62,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-  iperf:
-    container_name: iperf
-    image: networkstatic/iperf3
-    command: >
-      -s
-    ports:
-      - 5201:5201
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-
   jackett:
     container_name: jackett
     image: linuxserver/jackett
