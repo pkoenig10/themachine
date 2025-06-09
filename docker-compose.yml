@@ -161,13 +161,11 @@ services:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
-      TRANSMISSION_WEB_HOME: /web
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/transmission/config:/config
       - $DATA_DIR/downloads:/data
-      - $TRANSMISSION_WEB_DIR:/web:ro
 
 networks:
   default:
