@@ -1,4 +1,6 @@
 {
+	dns cloudflare {$CLOUDFLARE_API_TOKEN}
+
 	log {
 		format console {
 			time_local
@@ -24,8 +26,8 @@
 }
 
 *.{$DOMAIN} {
-	tls {$EMAIL} {
-		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	tls {
+		dns
 	}
 
 	@auth {
