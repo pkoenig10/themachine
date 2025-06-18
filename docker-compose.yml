@@ -36,7 +36,6 @@ services:
     environment:
       CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
       DOMAIN: $DOMAIN
-      EMAIL: $EMAIL
       USERNAME: $USERNAME
       PASSWORD: $PASSWORD
     ports:
