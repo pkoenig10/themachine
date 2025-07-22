@@ -61,17 +61,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-  jackett:
-    container_name: jackett
-    image: linuxserver/jackett
-    environment:
-      PUID: $UID
-      PGID: $GID
-    restart: unless-stopped
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/jackett/config:/config
-
   plex:
     container_name: plex
     image: linuxserver/plex
@@ -90,6 +79,17 @@ services:
       - $SERVER_DIR/plex/config:/config
       - $DATA_DIR/tv:/tv
       - $DATA_DIR/movies:/movies
+
+  prowlarr:
+    container_name: prowlarr
+    image: linuxserver/prowlarr
+    environment:
+      PUID: $UID
+      PGID: $GID
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/prowlarr/config:/config
 
   radarr:
     container_name: radarr

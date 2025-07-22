@@ -55,6 +55,14 @@ plex.{$DOMAIN} {
 	}
 }
 
+prowlarr.{$DOMAIN} {
+	handle /api/* {
+		reverse_proxy prowlarr:9696
+	}
+
+	respond 404
+}
+
 radarr.{$DOMAIN} {
 	handle /api/* {
 		reverse_proxy radarr:7878
@@ -65,7 +73,7 @@ radarr.{$DOMAIN} {
 
 search.{$DOMAIN} {
 	import auth users
-	reverse_proxy jackett:9117
+	reverse_proxy prowlarr:9696
 }
 
 sonarr.{$DOMAIN} {
