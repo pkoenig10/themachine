@@ -38,12 +38,12 @@ auth.{$DOMAIN} {
 }
 
 downloads.{$DOMAIN} {
-	import auth users
+	import auth admins
 	reverse_proxy transmission:9091
 }
 
 movies.{$DOMAIN} {
-	import auth users
+	import auth admins
 	reverse_proxy radarr:7878
 }
 
@@ -63,6 +63,14 @@ prowlarr.{$DOMAIN} {
 	respond 404
 }
 
+overseerr.{$DOMAIN} {
+	handle /api/* {
+		reverse_proxy overseerr:5055
+	}
+
+	respond 404
+}
+
 radarr.{$DOMAIN} {
 	handle /api/* {
 		reverse_proxy radarr:7878
@@ -71,8 +79,13 @@ radarr.{$DOMAIN} {
 	respond 404
 }
 
-search.{$DOMAIN} {
+requests.{$DOMAIN} {
 	import auth users
+	reverse_proxy overseerr:5055
+}
+
+search.{$DOMAIN} {
+	import auth admins
 	reverse_proxy prowlarr:9696
 }
 
@@ -107,6 +120,6 @@ transmission.{$DOMAIN} {
 }
 
 tv.{$DOMAIN} {
-	import auth users
+	import auth admins
 	reverse_proxy sonarr:8989
 }

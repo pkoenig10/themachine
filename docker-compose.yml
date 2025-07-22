@@ -61,6 +61,17 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
+  overseerr:
+    container_name: overseerr
+    image: linuxserver/overseerr
+    environment:
+      PUID: $UID
+      PGID: $GID
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_DIR/overseerr/config:/config
+
   plex:
     container_name: plex
     image: linuxserver/plex
