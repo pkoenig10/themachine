@@ -10,6 +10,7 @@ services:
       -cookie-domain $DOMAIN
       -config-file /config.yml
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./auth/config.yml:/config.yml:ro
@@ -23,6 +24,7 @@ services:
       -credentials-file /credentials.json
     profiles:
       - task
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR:/files/server:ro
@@ -43,6 +45,7 @@ services:
       - 443:443
       - 443:443/udp
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/caddy/data:/data
@@ -58,6 +61,7 @@ services:
     network_mode: host
     profiles:
       - task
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -152,8 +156,11 @@ services:
       HOST_SYS: /hostfs/sys
       HOST_VAR: /hostfs/var
       HOST_MOUNT_PREFIX: /hostfs
+    group_add:
+      - $DOCKER_GID
     network_mode: host
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /:/hostfs:ro
@@ -165,12 +172,12 @@ services:
     image: haugene/transmission-openvpn
     cap_add:
       - NET_ADMIN
-    devices:
-      - /dev/net/tun
     environment:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
+      PUID: $UID
+      PGID: $GID
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
