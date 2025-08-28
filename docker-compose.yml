@@ -1,3 +1,5 @@
+name: themachine
+
 services:
   auth:
     container_name: auth
