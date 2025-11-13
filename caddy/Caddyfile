@@ -42,6 +42,10 @@ downloads.{$DOMAIN} {
 	reverse_proxy transmission:9091
 }
 
+gym.{$DOMAIN} {
+	redir http://192.168.1.3
+}
+
 movies.{$DOMAIN} {
 	import auth admins
 	reverse_proxy radarr:7878
