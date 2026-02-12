@@ -89,8 +89,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/plex/config:/config
-      - /data/tv:/tv
-      - /data/movies:/movies
+      - /data/tv:/data/tv
+      - /data/movies:/data/movies
 
   prowlarr:
     container_name: prowlarr
@@ -109,8 +109,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/radarr/config:/config
-      - /data/downloads:/data
-      - /data/movies:/movies
+      - /data/downloads:/data/downloads
+      - /data/movies:/data/movies
 
   sonarr:
     container_name: sonarr
@@ -120,8 +120,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/sonarr/config:/config
-      - /data/downloads:/data
-      - /data/tv:/tv
+      - /data/downloads:/data/downloads
+      - /data/tv:/data/tv
 
   tautulli:
     container_name: tautulli
@@ -167,11 +167,13 @@ services:
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
       PUID: 1000
       PGID: 100
+      TRANSMISSION_DOWNLOAD_DIR: /data/downloads/completed
+      TRANSMISSION_INCOMPLETE_DIR: /data/downloads/incomplete
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/transmission/config:/config
-      - /data/downloads:/data
+      - /data/downloads:/data/downloads
 
 networks:
   default:
