@@ -1,11 +1,7 @@
-# Environment variables
 /.env
 
-# Auth
 /auth/config.yml
 
-# Backup
 /backup/credentials.json
 
-# Password
 /password
