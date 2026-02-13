@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -43,7 +44,6 @@
     firewall = {
       allowedTCPPorts = [
         443
-        32400
       ];
       allowedUDPPorts = [
         443
@@ -57,6 +57,12 @@
         "flakes"
         "nix-command"
       ];
+    };
+  };
+
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
     };
   };
 
@@ -80,6 +86,20 @@
   };
 
   services = {
+    caddy = {
+      configFile = "/etc/nixos/caddy/Caddyfile";
+      # TODO: this doesn't work, the data dir is ~/.local/share/caddy
+      # dataDir = "/config/caddy2";
+      enable = true;
+      environmentFile = "/etc/nixos/caddy/.env";
+      group = "users";
+      package = pkgs.caddy.withPlugins {
+        hash = "sha256-eDCHOuPm+o3mW7y8nSaTnabmB/msw6y2ZUoGu56uvK0=";
+        plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
+      };
+      user = "pkoenig10";
+    };
+
     cron = {
       enable = true;
       systemCronJobs = [
@@ -105,6 +125,58 @@
       };
     };
 
+    # overseerr = {
+    #   # TODO: change this
+    #   dataDir = "/config/overseerr/config";
+    #   enable = true;
+    #   group = "users";
+    #   user = "pkoenig10";
+    # };
+
+    # TODO: transcode to RAM
+    # TODO: Remove old IPs
+    plex = {
+      # TODO: change this
+      dataDir = "/config/plex/config/Library/Application Support";
+      enable = true;
+      group = "users";
+      openFirewall = true;
+      user = "pkoenig10";
+    };
+
+    # prowlarr = {
+    #   # TODO: change this
+    #   dataDir = "/config/prowlarr/config";
+    #   enable = true;
+    #   group = "users";
+    #   user = "pkoenig10";
+    # };
+
+    radarr = {
+      # TODO: change this
+      dataDir = "/config/radarr/config";
+      enable = true;
+      group = "users";
+      user = "pkoenig10";
+    };
+
+    sonarr = {
+      # TODO: change this
+      dataDir = "/config/sonarr/config";
+      enable = true;
+      group = "users";
+      user = "pkoenig10";
+    };
+
+    tautulli = {
+      # TODO: change this
+      configFile = "/config/tautulli/config/config.ini";
+      dataDir = "/config/tautulli/config";
+      enable = true;
+      group = "users";
+      user = "pkoenig10";
+    };
+
     tzupdate = {
       enable = true;
     };
@@ -112,6 +184,21 @@
 
   system = {
     stateVersion = "25.11";
+  };
+
+  systemd = {
+    services = {
+      caddy = {
+        # TODO: it's unfortunate we have to directly configure the systemd service
+        environment = {
+          XDG_CONFIG_HOME = "/config/caddy/config";
+          XDG_DATA_HOME = "/config/caddy/data";
+        };
+        serviceConfig = {
+          ProtectHome = lib.mkForce false;
+        };
+      };
+    };
   };
 
   users = {

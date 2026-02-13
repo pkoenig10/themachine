@@ -4,4 +4,6 @@
 
 /backup/credentials.json
 
+/caddy/.env
+
 /password

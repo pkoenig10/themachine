@@ -37,23 +37,6 @@ services:
       - ./backup/config.yml:/config.yml:ro
       - ./backup/credentials.json:/credentials.json:ro
 
-  caddy:
-    container_name: caddy
-    image: pkoenig10/caddy
-    environment:
-      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
-      DOMAIN: $DOMAIN
-      USERNAME: $USERNAME
-      PASSWORD: $PASSWORD
-    network_mode: host
-    restart: unless-stopped
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/caddy/data:/data
-      - /config/caddy/config:/config
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-
   ddns:
     container_name: ddns
     image: pkoenig10/ddns-cloudflare
@@ -77,22 +60,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /config/overseerr/config:/config
 
-  plex:
-    container_name: plex
-    image: linuxserver/plex
-    devices:
-      - /dev/dri
-    network_mode: host
-    restart: unless-stopped
-    tmpfs:
-      - /transcode
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/plex/config:/config
-      - /data/tv:/data/tv
-      - /data/movies:/data/movies
-
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr
@@ -102,40 +69,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/prowlarr/config:/config
-
-  radarr:
-    container_name: radarr
-    image: linuxserver/radarr
-    network_mode: host
-    restart: unless-stopped
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/radarr/config:/config
-      - /data/downloads:/data/downloads
-      - /data/movies:/data/movies
-
-  sonarr:
-    container_name: sonarr
-    image: linuxserver/sonarr
-    network_mode: host
-    restart: unless-stopped
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/sonarr/config:/config
-      - /data/downloads:/data/downloads
-      - /data/tv:/data/tv
-
-  tautulli:
-    container_name: tautulli
-    image: linuxserver/tautulli
-    network_mode: host
-    restart: unless-stopped
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/tautulli/config:/config
 
   telegraf:
     container_name: telegraf
