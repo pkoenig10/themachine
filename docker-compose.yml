@@ -5,12 +5,14 @@ services:
     container_name: auth
     image: pkoenig10/auth-oidc
     command: >
+      -http-address :4180
       -external-url https://auth.$DOMAIN
       -client-id $CLIENT_ID
       -client-secret $CLIENT_SECRET
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -config-file /config.yml
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -24,6 +26,7 @@ services:
       -bucket-name $BUCKET_NAME
       -config-file /config.yml
       -credentials-file /credentials.json
+    network_mode: host
     profiles:
       - task
     user: 1000:100
@@ -42,9 +45,7 @@ services:
       DOMAIN: $DOMAIN
       USERNAME: $USERNAME
       PASSWORD: $PASSWORD
-    ports:
-      - 443:443
-      - 443:443/udp
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -69,6 +70,7 @@ services:
   overseerr:
     container_name: overseerr
     image: linuxserver/overseerr
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -80,8 +82,7 @@ services:
     image: linuxserver/plex
     devices:
       - /dev/dri
-    ports:
-      - 32400:32400
+    network_mode: host
     restart: unless-stopped
     tmpfs:
       - /transcode
@@ -95,6 +96,7 @@ services:
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -104,6 +106,7 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -115,6 +118,7 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -126,6 +130,7 @@ services:
   tautulli:
     container_name: tautulli
     image: linuxserver/tautulli
+    network_mode: host
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -169,12 +174,9 @@ services:
       PGID: 100
       TRANSMISSION_DOWNLOAD_DIR: /data/downloads/completed
       TRANSMISSION_INCOMPLETE_DIR: /data/downloads/incomplete
+    network_mode: host
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/transmission/config:/config
       - /data/downloads:/data/downloads
-
-networks:
-  default:
-    enable_ipv6: true

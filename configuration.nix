@@ -39,6 +39,16 @@
     hostId = "3ef6eefe";
     hostName = "themachine";
     tempAddresses = "enabled";
+
+    firewall = {
+      allowedTCPPorts = [
+        443
+        32400
+      ];
+      allowedUDPPorts = [
+        443
+      ];
+    };
   };
 
   nix = {

@@ -9,7 +9,7 @@
 }
 
 (auth) {
-	reverse_proxy auth:80 {
+	reverse_proxy :4180 {
 		method GET
 		rewrite /auth?group={args[0]}&redirect={scheme}://{hostport}{uri}
 
@@ -34,21 +34,21 @@
 }
 
 auth.{$DOMAIN} {
-	reverse_proxy auth:80
+	reverse_proxy :4180
 }
 
 downloads.{$DOMAIN} {
 	import auth admins
-	reverse_proxy transmission:9091
+	reverse_proxy :9091
 }
 
 movies.{$DOMAIN} {
 	import auth admins
-	reverse_proxy radarr:7878
+	reverse_proxy :7878
 }
 
 plex.{$DOMAIN} {
-	reverse_proxy plex:32400 {
+	reverse_proxy :32400 {
 		transport http {
 			tls_insecure_skip_verify
 		}
@@ -57,7 +57,7 @@ plex.{$DOMAIN} {
 
 prowlarr.{$DOMAIN} {
 	handle /api/* {
-		reverse_proxy prowlarr:9696
+		reverse_proxy :9696
 	}
 
 	respond 404
@@ -65,7 +65,7 @@ prowlarr.{$DOMAIN} {
 
 overseerr.{$DOMAIN} {
 	handle /api/* {
-		reverse_proxy overseerr:5055
+		reverse_proxy :5055
 	}
 
 	respond 404
@@ -73,7 +73,7 @@ overseerr.{$DOMAIN} {
 
 radarr.{$DOMAIN} {
 	handle /api/* {
-		reverse_proxy radarr:7878
+		reverse_proxy :7878
 	}
 
 	respond 404
@@ -81,17 +81,17 @@ radarr.{$DOMAIN} {
 
 requests.{$DOMAIN} {
 	import auth users
-	reverse_proxy overseerr:5055
+	reverse_proxy :5055
 }
 
 search.{$DOMAIN} {
 	import auth admins
-	reverse_proxy prowlarr:9696
+	reverse_proxy :9696
 }
 
 sonarr.{$DOMAIN} {
 	handle /api/* {
-		reverse_proxy sonarr:8989
+		reverse_proxy :8989
 	}
 
 	respond 404
@@ -99,12 +99,12 @@ sonarr.{$DOMAIN} {
 
 stats.{$DOMAIN} {
 	import auth admins
-	reverse_proxy tautulli:8181
+	reverse_proxy :8181
 }
 
 tautulli.{$DOMAIN} {
 	handle /api/* {
-		reverse_proxy tautulli:8181
+		reverse_proxy :8181
 	}
 
 	respond 404
@@ -113,7 +113,7 @@ tautulli.{$DOMAIN} {
 transmission.{$DOMAIN} {
 	handle /transmission/rpc {
 		import basic_auth
-		reverse_proxy transmission:9091
+		reverse_proxy :9091
 	}
 
 	respond 404
@@ -121,5 +121,5 @@ transmission.{$DOMAIN} {
 
 tv.{$DOMAIN} {
 	import auth admins
-	reverse_proxy sonarr:8989
+	reverse_proxy :8989
 }
