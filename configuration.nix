@@ -147,13 +147,218 @@
   };
 
   virtualisation = {
+    oci-containers = {
+      # TODO(podman): Remove backend
+      backend = "docker";
+
+      containers = {
+        caddy = {
+          environmentFiles = [
+            "/etc/nixos/caddy/.env"
+          ];
+          image = "pkoenig10/caddy";
+          networks = [
+            "themachine"
+          ];
+          ports = [
+            "443:443"
+            "443:443/udp"
+          ];
+          pull = "always";
+          serviceName = "caddy";
+          user = "1000:100";
+          volumes = [
+            "/config/caddy/config:/config"
+            "/config/caddy/data:/data"
+            # TODO: Remove this?
+            "/etc/localtime:/etc/localtime:ro"
+            "/etc/nixos/caddy/Caddyfile:/etc/caddy/Caddyfile:ro"
+          ];
+        };
+
+        overseerr = {
+          image = "linuxserver/overseerr";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "overseerr";
+          user = "1000:100";
+          volumes = [
+            "/config/overseerr/config:/config"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        plex = {
+          devices = [
+            "/dev/dri"
+          ];
+          extraOptions = [
+            "--tmpfs=/transcode"
+          ];
+          image = "linuxserver/plex";
+          networks = [
+            "themachine"
+          ];
+          # TODO: Should we open more ports?
+          ports = [
+            "32400:32400"
+          ];
+          pull = "always";
+          serviceName = "plex";
+          user = "1000:100";
+          volumes = [
+            "/config/plex/config:/config"
+            # TODO: RequiresMountsFor?
+            "/data/movies:/data/movies"
+            "/data/tv:/data/tv"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        prowlarr = {
+          image = "linuxserver/prowlarr";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "prowlarr";
+          user = "1000:100";
+          volumes = [
+            "/config/prowlarr/config:/config"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        radarr = {
+          image = "linuxserver/radarr";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "radarr";
+          user = "1000:100";
+          volumes = [
+            "/config/radarr/config:/config"
+            "/data/downloads:/data/downloads"
+            "/data/movies:/data/movies"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        sonarr = {
+          image = "linuxserver/sonarr";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "sonarr";
+          user = "1000:100";
+          volumes = [
+            "/config/sonarr/config:/config"
+            "/data/downloads:/data/downloads"
+            "/data/tv:/data/tv"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        tautulli = {
+          image = "linuxserver/tautulli";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "tautulli";
+          user = "1000:100";
+          volumes = [
+            "/config/tautulli/config:/config"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+
+        telegraf = {
+          environment = {
+            # TODO: Are there more we need? Should these be alphabetized?
+            HOST_ETC = "/hostfs/etc";
+            HOST_PROC = "/hostfs/proc";
+            HOST_RUN = "/hostfs/run";
+            HOST_SYS = "/hostfs/sys";
+            HOST_VAR = "/hostfs/var";
+            HOST_MOUNT_PREFIX = "/hostfs";
+          };
+          environmentFiles = [
+            "/etc/nixos/telegraf/.env"
+          ];
+          extraOptions = [
+            # TODO(podman): Ghange group ID to 993 and make it stable
+            "--group-add=131"
+          ];
+          image = "telegraf";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "telegraf";
+          user = "1000:100";
+          volumes = [
+            "/:/hostfs:ro"
+            "/etc/localtime:/etc/localtime:ro"
+            "/etc/nixos/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
+            "/var/run/docker.sock:/var/run/docker.sock"
+            # TODO(podman): Change socket volume
+            # "/run/podman/podman.sock:/run/podman/podman.sock"
+          ];
+        };
+
+        # TODO: This routes all host traffic through the VPN
+        transmission = {
+          capabilities = {
+            NET_ADMIN = true;
+          };
+          environment = {
+            PUID = "1000";
+            PGID = "100";
+            TRANSMISSION_DOWNLOAD_DIR = "/data/downloads/completed";
+            TRANSMISSION_INCOMPLETE_DIR = "/data/downloads/incomplete";
+          };
+          environmentFiles = [
+            "/etc/nixos/transmission/.env"
+          ];
+          image = "haugene/transmission-openvpn";
+          networks = [
+            "themachine"
+          ];
+          pull = "always";
+          serviceName = "transmission";
+          volumes = [
+            "/config/transmission/config:/config"
+            "/data/downloads:/data/downloads"
+            "/etc/localtime:/etc/localtime:ro"
+          ];
+        };
+      };
+    };
+
     docker = {
       daemon = {
         settings = {
+          # Does [::1] if we enable this? Check the remote IPs in both cases
           userland-proxy = false;
         };
       };
       enable = true;
     };
+
+    # TODO(podman): Enable podman
+    # podman = {
+    #   autoPrune = {
+    #     enable = true;
+    #     flags = [
+    #       "--all"
+    #     ];
+    #   };
+    #   enable = true;
+    # };
   };
 }
