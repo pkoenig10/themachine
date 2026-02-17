@@ -69,10 +69,8 @@ services:
   overseerr:
     container_name: overseerr
     image: linuxserver/overseerr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/overseerr/config:/config
@@ -82,14 +80,12 @@ services:
     image: linuxserver/plex
     devices:
       - /dev/dri
-    environment:
-      PUID: $UID
-      PGID: $GID
     ports:
       - 32400:32400
     restart: unless-stopped
     tmpfs:
       - /transcode
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/plex/config:/config
@@ -99,10 +95,8 @@ services:
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/prowlarr/config:/config
@@ -110,10 +104,8 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/radarr/config:/config
@@ -123,10 +115,8 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/sonarr/config:/config
@@ -136,10 +126,8 @@ services:
   tautulli:
     container_name: tautulli
     image: linuxserver/tautulli
-    environment:
-      PUID: $UID
-      PGID: $GID
     restart: unless-stopped
+    user: $UID:$GID
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_DIR/tautulli/config:/config
