@@ -12,7 +12,7 @@ services:
       -cookie-domain $DOMAIN
       -config-file /config.yml
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./auth/config.yml:/config.yml:ro
@@ -26,10 +26,10 @@ services:
       -credentials-file /credentials.json
     profiles:
       - task
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR:/files/server:ro
+      - /config:/files/server:ro
       - .:/files/project:ro
       - ./backup/config.yml:/config.yml:ro
       - ./backup/credentials.json:/credentials.json:ro
@@ -46,11 +46,11 @@ services:
       - 443:443
       - 443:443/udp
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/caddy/data:/data
-      - $SERVER_DIR/caddy/config:/config
+      - /config/caddy/data:/data
+      - /config/caddy/config:/config
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
   ddns:
@@ -62,7 +62,7 @@ services:
     network_mode: host
     profiles:
       - task
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
@@ -70,10 +70,10 @@ services:
     container_name: overseerr
     image: linuxserver/overseerr
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/overseerr/config:/config
+      - /config/overseerr/config:/config
 
   plex:
     container_name: plex
@@ -85,52 +85,52 @@ services:
     restart: unless-stopped
     tmpfs:
       - /transcode
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/plex/config:/config
-      - $DATA_DIR/tv:/tv
-      - $DATA_DIR/movies:/movies
+      - /config/plex/config:/config
+      - /data/tv:/tv
+      - /data/movies:/movies
 
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/prowlarr/config:/config
+      - /config/prowlarr/config:/config
 
   radarr:
     container_name: radarr
     image: linuxserver/radarr
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/radarr/config:/config
-      - $DATA_DIR/downloads:/data
-      - $DATA_DIR/movies:/movies
+      - /config/radarr/config:/config
+      - /data/downloads:/data
+      - /data/movies:/movies
 
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/sonarr/config:/config
-      - $DATA_DIR/downloads:/data
-      - $DATA_DIR/tv:/tv
+      - /config/sonarr/config:/config
+      - /data/downloads:/data
+      - /data/tv:/tv
 
   tautulli:
     container_name: tautulli
     image: linuxserver/tautulli
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/tautulli/config:/config
+      - /config/tautulli/config:/config
 
   telegraf:
     container_name: telegraf
@@ -146,10 +146,10 @@ services:
       HOST_VAR: /hostfs/var
       HOST_MOUNT_PREFIX: /hostfs
     group_add:
-      - $DOCKER_GID
+      - 131
     network_mode: host
     restart: unless-stopped
-    user: $UID:$GID
+    user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /:/hostfs:ro
@@ -165,13 +165,13 @@ services:
       OPENVPN_PROVIDER: $OPENVPN_PROVIDER
       OPENVPN_USERNAME: $OPENVPN_USERNAME
       OPENVPN_PASSWORD: $OPENVPN_PASSWORD
-      PUID: $UID
-      PGID: $GID
+      PUID: 1000
+      PGID: 100
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $SERVER_DIR/transmission/config:/config
-      - $DATA_DIR/downloads:/data
+      - /config/transmission/config:/config
+      - /data/downloads:/data
 
 networks:
   default:
