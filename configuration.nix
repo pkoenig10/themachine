@@ -104,6 +104,25 @@
     stateVersion = "25.11";
   };
 
+  systemd = {
+    services = {
+      "network-themachine" = {
+        path = with pkgs; [
+          docker
+        ];
+        serviceConfig = {
+          RemainAfterExit = true;
+          Type = "oneshot";
+        };
+        script = ''
+          docker network inspect themachine &> /dev/null|| docker network create themachine --ipv6
+        '';
+        # TODO: Is this the right target?
+        wantedBy = [ "multi-user.target" ];
+      };
+    };
+  };
+
   users = {
     defaultUserShell = pkgs.fish;
     mutableUsers = false;

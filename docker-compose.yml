@@ -11,6 +11,8 @@ services:
       -token-key $COOKIE_KEY
       -cookie-domain $DOMAIN
       -config-file /config.yml
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -24,6 +26,8 @@ services:
       -bucket-name $BUCKET_NAME
       -config-file /config.yml
       -credentials-file /credentials.json
+    networks:
+      - themachine
     profiles:
       - task
     user: 1000:100
@@ -42,6 +46,8 @@ services:
       DOMAIN: $DOMAIN
       USERNAME: $USERNAME
       PASSWORD: $PASSWORD
+    networks:
+      - themachine
     ports:
       - 443:443
       - 443:443/udp
@@ -69,6 +75,8 @@ services:
   overseerr:
     container_name: overseerr
     image: linuxserver/overseerr
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -80,6 +88,8 @@ services:
     image: linuxserver/plex
     devices:
       - /dev/dri
+    networks:
+      - themachine
     ports:
       - 32400:32400
     restart: unless-stopped
@@ -95,6 +105,8 @@ services:
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -104,6 +116,8 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -115,6 +129,8 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -126,6 +142,8 @@ services:
   tautulli:
     container_name: tautulli
     image: linuxserver/tautulli
+    networks:
+      - themachine
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -169,6 +187,8 @@ services:
       PGID: 100
       TRANSMISSION_DOWNLOAD_DIR: /data/downloads/completed
       TRANSMISSION_INCOMPLETE_DIR: /data/downloads/incomplete
+    networks:
+      - themachine
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -176,5 +196,5 @@ services:
       - /data/downloads:/data/downloads
 
 networks:
-  default:
-    enable_ipv6: true
+  themachine:
+    external: true
