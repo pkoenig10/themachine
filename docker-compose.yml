@@ -89,8 +89,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/plex/config:/config
-      - /data/tv:/tv
-      - /data/movies:/movies
+      - /data:/data
 
   prowlarr:
     container_name: prowlarr
@@ -109,8 +108,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/radarr/config:/config
-      - /data/downloads:/data
-      - /data/movies:/movies
+      - /data:/data
 
   sonarr:
     container_name: sonarr
@@ -120,8 +118,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/sonarr/config:/config
-      - /data/downloads:/data
-      - /data/tv:/tv
+      - /data:/data
 
   tautulli:
     container_name: tautulli
@@ -171,7 +168,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/transmission/config:/config
-      - /data/downloads:/data
+      - /data:/data
 
 networks:
   default:
