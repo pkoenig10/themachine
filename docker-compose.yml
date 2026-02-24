@@ -4,13 +4,12 @@ services:
   auth:
     container_name: auth
     image: pkoenig10/auth-oidc
-    command: >
-      -external-url https://auth.$DOMAIN
-      -client-id $CLIENT_ID
-      -client-secret $CLIENT_SECRET
-      -token-key $COOKIE_KEY
-      -cookie-domain $DOMAIN
-      -config-file /config.yml
+    environment:
+      EXTERNAL_URL: https://auth.$DOMAIN
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
+      TOKEN_KEY: $TOKEN_KEY
+      COOKIE_DOMAIN: $DOMAIN
     restart: unless-stopped
     user: 1000:100
     volumes:
@@ -20,17 +19,16 @@ services:
   backup:
     container_name: backup
     image: pkoenig10/backup-google
-    command: >
-      -bucket-name $BUCKET_NAME
-      -config-file /config.yml
-      -credentials-file /credentials.json
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /credentials.json
+      BUCKET_NAME: $BUCKET_NAME
     profiles:
       - task
     user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /config:/files/server:ro
-      - .:/files/project:ro
+      - /config:/server:ro
+      - .:/project:ro
       - ./backup/config.yml:/config.yml:ro
       - ./backup/credentials.json:/credentials.json:ro
 
@@ -57,8 +55,8 @@ services:
     container_name: ddns
     image: pkoenig10/ddns-cloudflare
     environment:
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
       DOMAIN: $DOMAIN
-      API_TOKEN: $CLOUDFLARE_API_TOKEN
     network_mode: host
     profiles:
       - task
