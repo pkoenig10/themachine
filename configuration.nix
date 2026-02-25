@@ -25,8 +25,8 @@
   environment = {
     systemPackages = with pkgs; [
       caddy
-      clang
       fd
+      gcc
       go
       nixfmt
       ripgrep
