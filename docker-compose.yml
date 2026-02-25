@@ -64,15 +64,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-  overseerr:
-    container_name: overseerr
-    image: linuxserver/overseerr
-    restart: unless-stopped
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /config/overseerr/config:/config
-
   plex:
     container_name: plex
     image: linuxserver/plex
@@ -107,6 +98,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /config/radarr/config:/config
       - /data:/data
+
+  seerr:
+    container_name: seerr
+    image: seerr/seerr
+    restart: unless-stopped
+    user: 1000:100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/seerr/config:/app/config
 
   sonarr:
     container_name: sonarr

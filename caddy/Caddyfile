@@ -63,14 +63,6 @@ prowlarr.{$DOMAIN} {
 	respond 404
 }
 
-overseerr.{$DOMAIN} {
-	handle /api/* {
-		reverse_proxy overseerr:5055
-	}
-
-	respond 404
-}
-
 radarr.{$DOMAIN} {
 	handle /api/* {
 		reverse_proxy radarr:7878
@@ -81,12 +73,20 @@ radarr.{$DOMAIN} {
 
 requests.{$DOMAIN} {
 	import auth users
-	reverse_proxy overseerr:5055
+	reverse_proxy seerr:5055
 }
 
 search.{$DOMAIN} {
 	import auth admins
 	reverse_proxy prowlarr:9696
+}
+
+seerr.{$DOMAIN} {
+	handle /api/* {
+		reverse_proxy seerr:5055
+	}
+
+	respond 404
 }
 
 sonarr.{$DOMAIN} {
