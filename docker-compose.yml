@@ -51,19 +51,6 @@ services:
       - /config/caddy/config:/config
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
-  ddns:
-    container_name: ddns
-    image: pkoenig10/ddns-cloudflare
-    environment:
-      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
-      DOMAIN: $DOMAIN
-    network_mode: host
-    profiles:
-      - task
-    user: 1000:100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-
   plex:
     container_name: plex
     image: linuxserver/plex

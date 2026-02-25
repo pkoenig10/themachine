@@ -73,7 +73,6 @@
     cron = {
       enable = true;
       systemCronJobs = [
-        "*/5 * * * * pkoenig10 cd /etc/nixos && docker compose up -d ddns"
         "0   4 * * * pkoenig10 cd /etc/nixos && docker compose --profile task up -d --pull always"
       ];
     };

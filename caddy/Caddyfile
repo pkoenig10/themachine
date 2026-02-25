@@ -1,6 +1,15 @@
 {
 	dns cloudflare {$CLOUDFLARE_API_TOKEN}
 
+	dynamic_dns {
+		provider cloudflare {$CLOUDFLARE_API_TOKEN}
+		domains {
+			{$DOMAIN} @
+		}
+		versions ipv6
+		check_interval 1m
+	}
+
 	log {
 		format console {
 			time_local
