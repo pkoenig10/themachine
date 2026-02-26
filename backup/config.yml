@@ -1,11 +1,11 @@
 files:
-  - project/.env
-  - project/auth/config.yml
-  - project/backup/credentials.json
-  - server/plex/config/Library/Application Support/Plex Media Server/Preferences.xml
-  - server/seerr/config/settings.json
-  - server/prowlarr/config/Backups/**
-  - server/radarr/config/Backups/**
-  - server/sonarr/config/Backups/**
-  - server/tautulli/config/backups/**
-  - server/transmission/config/transmission-home/settings.json
+  - config/plex/config/Library/Application Support/Plex Media Server/Preferences.xml
+  - config/seerr/config/settings.json
+  - config/prowlarr/config/Backups/**
+  - config/radarr/config/Backups/**
+  - config/sonarr/config/Backups/**
+  - config/tautulli/config/backups/**
+  - config/transmission/config/transmission-home/settings.json
+  - etc/nixos/.env
+  - etc/nixos/auth/config.yml
+  - etc/nixos/backup/credentials.json

@@ -14,7 +14,7 @@ services:
     user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./auth/config.yml:/config.yml:ro
+      - /etc/nixos/auth/config.yml:/config.yml:ro
 
   backup:
     container_name: backup
@@ -27,10 +27,10 @@ services:
     user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /config:/server:ro
-      - .:/project:ro
-      - ./backup/config.yml:/config.yml:ro
-      - ./backup/credentials.json:/credentials.json:ro
+      - /config:/config:ro
+      - /etc/nixos:/etc/nixos:ro
+      - /etc/nixos/backup/config.yml:/config.yml:ro
+      - /etc/nixos/backup/credentials.json:/credentials.json:ro
 
   caddy:
     container_name: caddy
@@ -49,7 +49,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /config/caddy/data:/data
       - /config/caddy/config:/config
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /etc/nixos/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
   plex:
     container_name: plex
@@ -136,7 +136,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /etc/nixos/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
   transmission:
     container_name: transmission
