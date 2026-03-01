@@ -148,6 +148,7 @@
 
   virtualisation = {
     oci-containers = {
+      # TODO(podman): Remove backend
       backend = "docker";
 
       containers = {
@@ -314,6 +315,7 @@
             "/etc/nixos/telegraf/.env"
           ];
           extraOptions = [
+            # TODO(podman): Change group ID to 993 and make it stable
             "--group-add=131"
           ];
           image = "telegraf";
@@ -327,6 +329,8 @@
             "/:/host:ro"
             "/etc/nixos/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
             "/var/run/docker.sock:/var/run/docker.sock"
+            # TODO(podman): Change socket volume
+            # "/run/podman/podman.sock:/run/podman/podman.sock"
           ];
         };
 
@@ -363,5 +367,16 @@
       };
       enable = true;
     };
+
+    # TODO(podman): Enable podman
+    # podman = {
+    #   autoPrune = {
+    #     enable = true;
+    #     flags = [
+    #       "--all"
+    #     ];
+    #   };
+    #   enable = true;
+    # };
   };
 }
