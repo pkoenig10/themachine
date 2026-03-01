@@ -9,3 +9,4 @@ files:
   - etc/nixos/.env
   - etc/nixos/auth/config.yml
   - etc/nixos/backup/credentials.json
+  - etc/nixos/password
