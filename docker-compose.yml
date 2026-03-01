@@ -121,12 +121,14 @@ services:
       GRAFANA_URL: $GRAFANA_URL
       GRAFANA_USERNAME: $GRAFANA_USERNAME
       GRAFANA_PASSWORD: $GRAFANA_PASSWORD
-      HOST_ETC: /hostfs/etc
-      HOST_PROC: /hostfs/proc
-      HOST_RUN: /hostfs/run
-      HOST_SYS: /hostfs/sys
-      HOST_VAR: /hostfs/var
-      HOST_MOUNT_PREFIX: /hostfs
+      HOST_DEV: /host/dev
+      HOST_ETC: /host/etc
+      HOST_PROC: /host/proc
+      HOST_ROOT: /host/
+      HOST_RUN: /host/run
+      HOST_SYS: /host/sys
+      HOST_VAR: /host/var
+      HOST_MOUNT_PREFIX: /host
     group_add:
       - 131
     network_mode: host
@@ -134,7 +136,7 @@ services:
     user: 1000:100
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /:/hostfs:ro
+      - /:/host:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/nixos/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
