@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -70,13 +71,6 @@
   };
 
   services = {
-    cron = {
-      enable = true;
-      systemCronJobs = [
-        "0   4 * * * pkoenig10 cd /etc/nixos && docker compose --profile task up -d --pull always"
-      ];
-    };
-
     iperf3 = {
       enable = true;
       openFirewall = true;
@@ -103,6 +97,34 @@
     stateVersion = "25.11";
   };
 
+  systemd = {
+    services = {
+      "backup" = {
+        serviceConfig = {
+          Restart = lib.mkForce "no";
+          Type = "oneshot";
+        };
+        startAt = "4:0";
+      };
+
+      "network-containers" = {
+        path = with pkgs; [
+          docker
+        ];
+        serviceConfig = {
+          RemainAfterExit = true;
+          Type = "oneshot";
+        };
+        script = ''
+          docker network inspect containers &> /dev/null || docker network create containers --ipv6
+        '';
+        wantedBy = [
+          "multi-user.target"
+        ];
+      };
+    };
+  };
+
   users = {
     defaultUserShell = pkgs.fish;
     mutableUsers = false;
@@ -127,6 +149,214 @@
   };
 
   virtualisation = {
+    oci-containers = {
+      backend = "docker";
+
+      containers = {
+        auth = {
+          environmentFiles = [
+            "/etc/nixos/auth/.env"
+          ];
+          image = "pkoenig10/auth-oidc";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "auth";
+          user = "1000:100";
+          volumes = [
+            "/etc/nixos/auth/config.yml:/config.yml:ro"
+          ];
+        };
+
+        backup = {
+          autoStart = false;
+          environment = {
+            GOOGLE_APPLICATION_CREDENTIALS = "/credentials.json";
+          };
+          environmentFiles = [
+            "/etc/nixos/backup/.env"
+          ];
+          image = "pkoenig10/backup-google";
+          pull = "always";
+          serviceName = "backup";
+          user = "1000:100";
+          volumes = [
+            "/config:/config:ro"
+            "/etc/nixos:/etc/nixos:ro"
+            "/etc/nixos/backup/config.yml:/config.yml:ro"
+            "/etc/nixos/backup/credentials.json:/credentials.json:ro"
+          ];
+        };
+
+        caddy = {
+          environmentFiles = [
+            "/etc/nixos/caddy/.env"
+          ];
+          image = "pkoenig10/caddy";
+          networks = [
+            "containers"
+          ];
+          ports = [
+            "443:443"
+            "443:443/udp"
+          ];
+          pull = "always";
+          serviceName = "caddy";
+          user = "1000:100";
+          volumes = [
+            "/config/caddy/config:/config"
+            "/config/caddy/data:/data"
+            "/etc/nixos/caddy/Caddyfile:/etc/caddy/Caddyfile:ro"
+          ];
+        };
+
+        plex = {
+          devices = [
+            "/dev/dri"
+          ];
+          extraOptions = [
+            "--tmpfs=/transcode"
+          ];
+          image = "linuxserver/plex";
+          networks = [
+            "containers"
+          ];
+          ports = [
+            "32400:32400"
+          ];
+          pull = "always";
+          serviceName = "plex";
+          user = "1000:100";
+          volumes = [
+            "/config/plex/config:/config"
+            "/data:/data"
+          ];
+        };
+
+        prowlarr = {
+          image = "linuxserver/prowlarr";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "prowlarr";
+          user = "1000:100";
+          volumes = [
+            "/config/prowlarr/config:/config"
+          ];
+        };
+
+        radarr = {
+          image = "linuxserver/radarr";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "radarr";
+          user = "1000:100";
+          volumes = [
+            "/config/radarr/config:/config"
+            "/data:/data"
+          ];
+        };
+
+        seerr = {
+          image = "seerr/seerr";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "seerr";
+          user = "1000:100";
+          volumes = [
+            "/config/seerr/config:/app/config"
+          ];
+        };
+
+        sonarr = {
+          image = "linuxserver/sonarr";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "sonarr";
+          user = "1000:100";
+          volumes = [
+            "/config/sonarr/config:/config"
+            "/data:/data"
+          ];
+        };
+
+        tautulli = {
+          image = "linuxserver/tautulli";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "tautulli";
+          user = "1000:100";
+          volumes = [
+            "/config/tautulli/config:/config"
+          ];
+        };
+
+        telegraf = {
+          environment = {
+            HOST_DEV = "/host/dev";
+            HOST_ETC = "/host/etc";
+            HOST_PROC = "/host/proc";
+            HOST_ROOT = "/host/";
+            HOST_RUN = "/host/run";
+            HOST_SYS = "/host/sys";
+            HOST_VAR = "/host/var";
+            HOST_MOUNT_PREFIX = "/host";
+          };
+          environmentFiles = [
+            "/etc/nixos/telegraf/.env"
+          ];
+          extraOptions = [
+            "--group-add=131"
+          ];
+          image = "telegraf";
+          networks = [
+            "host"
+          ];
+          pull = "always";
+          serviceName = "telegraf";
+          user = "1000:100";
+          volumes = [
+            "/:/host:ro"
+            "/etc/nixos/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
+            "/var/run/docker.sock:/var/run/docker.sock"
+          ];
+        };
+
+        transmission = {
+          capabilities = {
+            NET_ADMIN = true;
+          };
+          environment = {
+            PUID = "1000";
+            PGID = "100";
+          };
+          environmentFiles = [
+            "/etc/nixos/transmission/.env"
+          ];
+          image = "haugene/transmission-openvpn";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "transmission";
+          volumes = [
+            "/config/transmission/config:/config"
+            "/data:/data"
+          ];
+        };
+      };
+    };
+
     docker = {
       daemon = {
         settings = {

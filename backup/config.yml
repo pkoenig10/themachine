@@ -6,7 +6,7 @@ files:
   - config/sonarr/config/Backups/**
   - config/tautulli/config/backups/**
   - config/transmission/config/transmission-home/settings.json
-  - etc/nixos/.env
+  - etc/nixos/**/.env
   - etc/nixos/auth/config.yml
   - etc/nixos/backup/credentials.json
   - etc/nixos/password
