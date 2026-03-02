@@ -40,6 +40,7 @@
     hostId = "3ef6eefe";
     hostName = "themachine";
     tempAddresses = "enabled";
+    useNetworkd = true;
   };
 
   nix = {
