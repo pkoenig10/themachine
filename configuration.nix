@@ -102,7 +102,6 @@
     services = {
       "backup" = {
         serviceConfig = {
-          Restart = lib.mkForce "no";
           Type = "oneshot";
         };
         startAt = "4:0";
