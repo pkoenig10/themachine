@@ -132,3 +132,7 @@ tv.{$DOMAIN} {
 	import auth admins
 	reverse_proxy sonarr:8989
 }
+
+vault.{$DOMAIN} {
+	reverse_proxy vaultwarden:80
+}

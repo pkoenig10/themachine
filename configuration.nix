@@ -354,6 +354,22 @@
             "/data:/data"
           ];
         };
+
+        vaultwarden = {
+          environmentFiles = [
+            "/etc/nixos/vaultwarden/.env"
+          ];
+          image = "vaultwarden/server";
+          networks = [
+            "containers"
+          ];
+          pull = "always";
+          serviceName = "vaultwarden";
+          user = "1000:100";
+          volumes = [
+            "/config/vaultwarden/data:/data"
+          ];
+        };
       };
     };
 
