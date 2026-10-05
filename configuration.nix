@@ -358,6 +358,15 @@
     };
 
     docker = {
+      autoPrune = {
+        allVolumes = {
+          enable = true;
+        };
+        enable = true;
+        flags = [
+          "--all"
+        ];
+      };
       daemon = {
         settings = {
           userland-proxy = false;
