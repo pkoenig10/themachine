@@ -101,10 +101,16 @@
   systemd = {
     services = {
       "backup" = {
+        partOf = [
+          "themachine.target"
+        ];
         serviceConfig = {
           Type = "oneshot";
         };
         startAt = "4:0";
+        wantedBy = [
+          "themachine.target"
+        ];
       };
 
       "network-containers" = {
@@ -121,6 +127,12 @@
         wantedBy = [
           "multi-user.target"
         ];
+      };
+    };
+
+    targets = {
+      "themachine" = {
+        wantedBy = [ "multi-user.target" ];
       };
     };
   };

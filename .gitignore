@@ -5,3 +5,5 @@
 /backup/credentials.json
 
 /password
+
+docker-compose.nix
