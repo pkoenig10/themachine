@@ -1,0 +1,19 @@
+[Unit]
+Description=Themachine iperf3 container
+
+[Container]
+Image=docker.io/networkstatic/iperf3
+ContainerName=iperf3
+Pull=always
+SecurityLabelDisable=true
+Network=host
+Exec=--server
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+[Unit]
+Description=Themachine seerr container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+
+[Container]
+Image=docker.io/seerr/seerr
+ContainerName=seerr
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+Volume=/var/lib/themachine/config/seerr/config:/app/config
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

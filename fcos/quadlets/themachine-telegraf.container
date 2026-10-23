@@ -1,0 +1,35 @@
+[Unit]
+Description=Themachine telegraf container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+Requires=podman.socket
+After=podman.socket
+
+[Container]
+Image=docker.io/library/telegraf
+ContainerName=telegraf
+Pull=always
+SecurityLabelDisable=true
+Network=host
+EnvironmentFile=/etc/themachine/telegraf/.env
+Environment=HOST_DEV=/host/dev
+Environment=HOST_ETC=/host/etc
+Environment=HOST_PROC=/host/proc
+Environment=HOST_ROOT=/host/
+Environment=HOST_RUN=/host/run
+Environment=HOST_SYS=/host/sys
+Environment=HOST_VAR=/host/var
+Environment=HOST_MOUNT_PREFIX=/host
+Volume=/:/host:ro
+Volume=/etc/themachine/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+Volume=/run/podman/podman.sock:/var/run/docker.sock
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+ExecStartPre=/usr/bin/test -f /etc/themachine/telegraf/.env
+
+[Install]
+WantedBy=multi-user.target

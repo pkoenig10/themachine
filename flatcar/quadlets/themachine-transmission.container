@@ -1,0 +1,28 @@
+[Unit]
+Description=Themachine transmission container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+After=ensure-sysext.service
+
+[Container]
+Image=docker.io/haugene/transmission-openvpn
+ContainerName=transmission
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+EnvironmentFile=/etc/themachine/transmission/.env
+Environment=PUID=1000
+Environment=PGID=100
+AddCapability=NET_ADMIN
+Volume=/var/lib/themachine/config/transmission/config:/config
+Volume=/var/lib/themachine/data:/data
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+ExecStartPre=/usr/bin/test -f /etc/themachine/transmission/.env
+
+[Install]
+WantedBy=multi-user.target

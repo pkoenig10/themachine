@@ -5,3 +5,6 @@
 /backup/credentials.json
 
 /password
+
+/flatcar/config.ign
+/fcos/config.ign

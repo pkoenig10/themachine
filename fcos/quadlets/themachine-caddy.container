@@ -1,0 +1,28 @@
+[Unit]
+Description=Themachine caddy container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+
+[Container]
+Image=docker.io/pkoenig10/caddy
+ContainerName=caddy
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+EnvironmentFile=/etc/themachine/caddy/.env
+PublishPort=443:443
+PublishPort=443:443/udp
+Volume=/var/lib/themachine/config/caddy/config:/config
+Volume=/var/lib/themachine/config/caddy/data:/data
+Volume=/etc/themachine/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+ExecStartPre=/usr/bin/test -f /etc/themachine/caddy/.env
+
+[Install]
+WantedBy=multi-user.target

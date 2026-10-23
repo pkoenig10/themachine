@@ -1,0 +1,24 @@
+[Unit]
+Description=Themachine sonarr container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+After=ensure-sysext.service
+
+[Container]
+Image=docker.io/linuxserver/sonarr
+ContainerName=sonarr
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+Volume=/var/lib/themachine/config/sonarr/config:/config
+Volume=/var/lib/themachine/data:/data
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

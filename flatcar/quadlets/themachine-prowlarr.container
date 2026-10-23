@@ -1,0 +1,23 @@
+[Unit]
+Description=Themachine prowlarr container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+After=ensure-sysext.service
+
+[Container]
+Image=docker.io/linuxserver/prowlarr
+ContainerName=prowlarr
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+Volume=/var/lib/themachine/config/prowlarr/config:/config
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+[Unit]
+Description=Themachine tautulli container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+
+[Container]
+Image=docker.io/linuxserver/tautulli
+ContainerName=tautulli
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+Volume=/var/lib/themachine/config/tautulli/config:/config
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

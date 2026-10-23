@@ -1,0 +1,25 @@
+[Unit]
+Description=Themachine auth container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+
+[Container]
+Image=docker.io/pkoenig10/auth-oidc
+ContainerName=auth
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+EnvironmentFile=/etc/themachine/auth/.env
+Volume=/etc/themachine/auth/config.yml:/config.yml:ro
+
+[Service]
+Restart=always
+RestartSec=30
+TimeoutStartSec=900
+TimeoutStopSec=30
+ExecStartPre=/usr/bin/test -f /etc/themachine/auth/.env
+ExecStartPre=/usr/bin/test -f /etc/themachine/auth/config.yml
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+[Unit]
+Description=Themachine backup container
+Requires=var-lib-themachine-data.mount
+After=var-lib-themachine-data.mount
+
+[Container]
+Image=docker.io/pkoenig10/backup-google
+ContainerName=backup
+Pull=always
+SecurityLabelDisable=true
+Network=containers.network
+User=1000:100
+EnvironmentFile=/etc/themachine/backup/.env
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/etc/themachine/backup/credentials.json
+Volume=/var/lib/themachine/config:/config:ro
+Volume=/etc/themachine:/etc/themachine:ro
+Volume=/etc/themachine/backup/config.yml:/config.yml:ro
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/test -f /etc/themachine/backup/.env
+ExecStartPre=/usr/bin/test -f /etc/themachine/backup/credentials.json
