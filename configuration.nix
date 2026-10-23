@@ -10,11 +10,13 @@
   ];
 
   boot = {
+    initrd.systemd.enable = true;
     loader = {
       efi = {
         canTouchEfiVariables = true;
       };
       systemd-boot = {
+        configurationLimit = 10;
         enable = true;
       };
     };
@@ -37,13 +39,19 @@
   };
 
   networking = {
+    dhcpcd.enable = false;
     hostId = "3ef6eefe";
     hostName = "themachine";
     tempAddresses = "enabled";
-    useNetworkd = true;
+    useDHCP = false;
   };
 
   nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
     settings = {
       experimental-features = [
         "flakes"
@@ -99,6 +107,33 @@
   };
 
   systemd = {
+    network = {
+      enable = true;
+      wait-online.anyInterface = true;
+      networks = {
+        "99-ethernet-default-dhcp" = {
+          matchConfig = {
+            Type = "ether";
+            Kind = "!*";
+          };
+          networkConfig = {
+            DHCP = "yes";
+            IPv6PrivacyExtensions = "kernel";
+          };
+        };
+
+        "99-wireless-client-dhcp" = {
+          matchConfig.WLANInterfaceType = "station";
+          networkConfig = {
+            DHCP = "yes";
+            IPv6PrivacyExtensions = "kernel";
+          };
+          dhcpV4Config.RouteMetric = 1025;
+          ipv6AcceptRAConfig.RouteMetric = 1025;
+        };
+      };
+    };
+
     services = {
       "backup" = {
         serviceConfig = {
